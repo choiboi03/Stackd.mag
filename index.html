@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STACKD — 콘텐츠 스튜디오</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --black:#0a0a0a;--white:#f5f2ec;--cream:#efeae0;
+  --ink:#1a1714;--ink2:#4a4540;--ink3:#8a8480;--rule:#d0cab8;
+  --accent:#c8a84b;--green:#2d5a3d;--red:#8b2c2c;
+  --fd:'DM Serif Display',serif;--fm:'DM Mono',monospace;--fb:'Noto Sans KR',sans-serif;
+}
+body{background:var(--cream);color:var(--ink);font-family:var(--fb);min-height:100vh;overflow-x:hidden;}
+
+/* ── MASTHEAD ── */
+.masthead{
+  background:var(--black);padding:0 40px;
+  display:flex;align-items:stretch;
+  border-bottom:1px solid #1c1c1c;
+  position:sticky;top:0;z-index:100;height:52px;
+}
+.logo{
+  font-family:var(--fm);font-size:12px;font-weight:500;color:var(--accent);
+  letter-spacing:.18em;text-transform:uppercase;
+  padding-right:28px;border-right:1px solid #1c1c1c;margin-right:0;
+  display:flex;flex-direction:column;justify-content:center;gap:2px;white-space:nowrap;
+}
+.logo span{font-size:8px;color:#444;letter-spacing:.2em;}
+.masthead-tabs{display:flex;flex:1;overflow-x:auto;}
+.masthead-tabs::-webkit-scrollbar{height:0;}
+.tab-btn{
+  background:none;border:none;color:#555;font-family:var(--fm);font-size:10px;
+  letter-spacing:.12em;text-transform:uppercase;padding:0 20px;cursor:pointer;
+  border-right:1px solid #1c1c1c;border-bottom:2px solid transparent;
+  transition:all .2s;white-space:nowrap;height:52px;
+}
+.tab-btn:hover{color:#aaa;}
+.tab-btn.active{color:var(--white);border-bottom-color:var(--accent);}
+.masthead-right{
+  display:flex;align-items:center;gap:12px;margin-left:auto;
+  padding-left:20px;border-left:1px solid #1c1c1c;
+}
+.badge{font-family:var(--fm);font-size:9px;color:#444;letter-spacing:.08em;white-space:nowrap;}
+
+/* ── PAGES ── */
+.page{display:none;animation:fi .2s ease;}
+.page.active{display:block;}
+@keyframes fi{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+
+/* ── HERO ── */
+.hero{background:var(--black);color:var(--white);padding:36px 40px 32px;}
+.hero-eye{font-family:var(--fm);font-size:9px;letter-spacing:.2em;color:#444;
+  text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:12px;}
+.hero-eye::after{content:'';flex:1;height:1px;background:#1c1c1c;}
+.hero-title{font-family:var(--fd);font-size:40px;line-height:1.1;letter-spacing:-.01em;margin-bottom:6px;}
+.hero-title em{font-style:italic;color:var(--accent);}
+.hero-sub{font-size:12px;color:#666;}
+
+/* ── TWO-COL LAYOUT ── */
+.layout{display:grid;grid-template-columns:280px 1fr;min-height:calc(100vh - 104px);}
+.sidebar{border-right:1px solid var(--rule);background:var(--white);padding:24px 20px;}
+.main{padding:28px 36px;}
+
+/* ── SIDEBAR ── */
+.sb-label{font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink3);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--rule);}
+.sb-section{margin-bottom:24px;}
+.series-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:7px 9px;border-radius:3px;cursor:pointer;transition:background .15s;margin-bottom:2px;
+}
+.series-item:hover{background:var(--cream);}
+.series-item.active{background:var(--ink);color:var(--white);}
+.si-name{font-size:11px;font-weight:700;}
+.si-count{font-family:var(--fm);font-size:9px;color:var(--ink3);
+  background:var(--cream);padding:1px 5px;border-radius:8px;}
+.series-item.active .si-count{background:#333;color:#666;}
+.week-row{display:flex;justify-content:space-between;align-items:center;
+  padding:5px 0;border-bottom:1px solid var(--rule);}
+.week-row:last-child{border:none;}
+.wr-lbl{font-size:10px;color:var(--ink2);}
+.wr-val{font-family:var(--fm);font-size:11px;font-weight:500;}
+.next-item{background:var(--cream);padding:11px;border-left:3px solid var(--accent);}
+.ni-date{font-family:var(--fm);font-size:8px;color:var(--ink3);margin-bottom:3px;}
+.ni-title{font-size:11px;font-weight:700;}
+.ni-sub{font-size:10px;color:var(--ink2);margin-top:3px;}
+
+/* ── BUTTONS ── */
+.btn{background:var(--ink);color:var(--white);border:none;font-family:var(--fm);
+  font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:9px 16px;cursor:pointer;transition:background .2s;}
+.btn:hover{background:var(--green);}
+.btn-outline{background:none;border:1px solid var(--ink);color:var(--ink);font-family:var(--fm);
+  font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:8px 14px;cursor:pointer;transition:all .2s;}
+.btn-outline:hover{background:var(--ink);color:var(--white);}
+.btn-accent{background:var(--accent);color:var(--black);border:none;font-family:var(--fm);
+  font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:9px 16px;cursor:pointer;transition:all .2s;}
+.btn-accent:hover{background:#e0c060;}
+
+/* ── CARDS ── */
+.posts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.post-card{
+  background:var(--white);border:1px solid var(--rule);padding:18px;
+  cursor:pointer;transition:all .18s;position:relative;overflow:hidden;
+}
+.post-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;
+  background:var(--rule);transition:background .2s;}
+.post-card:hover::before{background:var(--accent);}
+.post-card:hover{border-color:#bbb;transform:translateY(-1px);box-shadow:0 3px 12px rgba(0,0,0,.06);}
+.pc-tag{font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink3);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.pc-tag .num{background:var(--ink);color:var(--accent);padding:1px 5px;font-size:8px;}
+.pc-title{font-family:var(--fd);font-size:16px;line-height:1.3;margin-bottom:7px;}
+.pc-preview{font-size:11px;color:var(--ink2);line-height:1.6;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.pc-footer{display:flex;align-items:center;justify-content:space-between;
+  margin-top:12px;padding-top:10px;border-top:1px solid var(--rule);}
+.status{font-family:var(--fm);font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:2px;}
+.s-draft{background:#f0e8d0;color:#8a6c20;}
+.s-ready{background:#d0e8d8;color:#1a5a30;}
+.s-pub{background:#1a1714;color:#666;}
+.pc-date{font-family:var(--fm);font-size:9px;color:var(--ink3);}
+
+/* ── TOOLBAR ── */
+.toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.toolbar h2{font-family:var(--fd);font-size:24px;letter-spacing:-.01em;}
+
+/* ── MAGAZINE LAYOUT ── */
+.mag-cover{
+  display:grid;grid-template-columns:1fr 340px;gap:1px;
+  background:var(--rule);border:1px solid var(--rule);margin-bottom:20px;
+}
+.cover-main{background:var(--black);color:var(--white);padding:36px;position:relative;overflow:hidden;}
+.cover-main::after{content:'COVER';position:absolute;right:-24px;top:24px;
+  font-family:var(--fm);font-size:72px;font-weight:500;color:rgba(255,255,255,.03);letter-spacing:-4px;}
+.cover-issue{font-family:var(--fm);font-size:8px;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:16px;}
+.cover-title{font-family:var(--fd);font-size:36px;line-height:1.1;margin-bottom:12px;}
+.cover-title em{font-style:italic;color:var(--accent);}
+.cover-desc{font-size:12px;color:#888;line-height:1.7;max-width:380px;}
+.cover-sidebar{background:var(--white);padding:24px 20px;}
+.toc-label{font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink3);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--ink);}
+.toc-item{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid var(--rule);cursor:pointer;}
+.toc-item:hover{opacity:.7;}
+.toc-item:last-child{border:none;}
+.toc-num{font-family:var(--fm);font-size:9px;color:var(--ink3);min-width:18px;margin-top:1px;}
+.toc-ttl{font-size:11px;font-weight:700;line-height:1.35;}
+.toc-cat{font-family:var(--fm);font-size:8px;color:var(--ink3);margin-top:1px;}
+
+.article-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--rule);border:1px solid var(--rule);margin-bottom:16px;}
+.article-card{background:var(--white);padding:20px;cursor:pointer;transition:background .15s;}
+.article-card:hover{background:var(--cream);}
+.ac-cat{font-family:var(--fm);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;}
+.ac-title{font-family:var(--fd);font-size:15px;line-height:1.3;margin-bottom:7px;}
+.ac-excerpt{font-size:11px;color:var(--ink2);line-height:1.6;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.ac-tag{display:inline-block;background:var(--ink);color:var(--white);
+  font-family:var(--fm);font-size:7px;letter-spacing:.1em;padding:2px 6px;margin-top:10px;}
+
+/* ── AI STUDIO: INPUT ── */
+.studio-layout{display:grid;grid-template-columns:320px 1fr;min-height:calc(100vh - 104px);}
+.studio-input{border-right:1px solid var(--rule);background:var(--white);display:flex;flex-direction:column;}
+.studio-section{padding:20px;border-bottom:1px solid var(--rule);}
+.form-group{margin-bottom:14px;}
+.fl{font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:5px;}
+.fi,.fs,.ft{width:100%;background:var(--cream);border:1px solid var(--rule);
+  padding:8px 11px;font-family:var(--fb);font-size:12px;color:var(--ink);outline:none;transition:border-color .2s;}
+.fi:focus,.fs:focus,.ft:focus{border-color:var(--ink);}
+.ft{resize:vertical;min-height:130px;line-height:1.7;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+.platform-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.ptog{
+  display:flex;align-items:center;gap:7px;padding:9px 11px;
+  border:1px solid var(--rule);cursor:pointer;transition:all .2s;background:var(--cream);
+  user-select:none;
+}
+.ptog:hover{border-color:var(--ink3);}
+.ptog.on{background:var(--ink);border-color:var(--ink);}
+.ptog.on .pt-name{color:var(--white);}
+.pt-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.d-t{background:#aaa;}.d-i{background:#833ab4;}.d-b{background:#2563eb;}.d-x{background:#555;}
+.pt-name{font-family:var(--fm);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);}
+
+.btn-gen{
+  width:100%;background:var(--ink);color:var(--white);border:none;
+  font-family:var(--fm);font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+  padding:14px;cursor:pointer;transition:background .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-gen:hover{background:var(--green);}
+.btn-gen.loading{background:#333;cursor:not-allowed;}
+.spinner{width:11px;height:11px;border:1.5px solid #555;border-top-color:var(--accent);
+  border-radius:50%;animation:spin .8s linear infinite;display:none;}
+.btn-gen.loading .spinner{display:block;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── AI STUDIO: OUTPUT ── */
+.studio-output{padding:28px;background:var(--cream);}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;text-align:center;}
+.empty-icon{font-size:40px;margin-bottom:14px;opacity:.25;}
+.empty-title{font-family:var(--fd);font-size:22px;color:var(--ink);margin-bottom:6px;}
+.empty-desc{font-size:12px;color:var(--ink3);line-height:1.6;}
+
+.output-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.output-ttl{font-family:var(--fd);font-size:24px;letter-spacing:-.01em;}
+.ptabs{display:flex;gap:0;border-bottom:1px solid var(--rule);margin-bottom:20px;}
+.ptab{font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  padding:7px 14px;cursor:pointer;border-bottom:2px solid transparent;color:var(--ink3);transition:all .2s;}
+.ptab:hover{color:var(--ink);}
+.ptab.active{color:var(--ink);border-bottom-color:var(--ink);}
+.output-pane{display:none;}
+.output-pane.active{display:block;}
+
+.out-card{background:var(--white);border:1px solid var(--rule);margin-bottom:14px;overflow:hidden;}
+.out-card-head{background:var(--black);color:var(--white);padding:9px 14px;
+  display:flex;align-items:center;justify-content:space-between;}
+.out-platform{font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#666;}
+.out-actions{display:flex;gap:7px;}
+.btn-copy{background:none;border:1px solid #333;color:#777;font-family:var(--fm);
+  font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;cursor:pointer;transition:all .2s;}
+.btn-copy:hover{border-color:#888;color:var(--white);}
+.btn-copy.copied{border-color:var(--accent);color:var(--accent);}
+.out-body{padding:18px;}
+
+/* Thread preview */
+.tp .t-post{display:flex;gap:9px;margin-bottom:12px;position:relative;}
+.tp .t-post::after{content:'';position:absolute;left:14px;top:32px;bottom:-4px;width:1px;background:var(--rule);}
+.tp .t-post:last-child::after{display:none;}
+.av{width:28px;height:28px;background:var(--ink);border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:7px;color:var(--accent);}
+.t-con{flex:1;}
+.t-handle{font-size:10px;font-weight:700;margin-bottom:2px;}
+.t-text{font-size:11px;line-height:1.65;color:var(--ink2);white-space:pre-wrap;}
+.t-num{font-family:var(--fm);font-size:8px;color:var(--ink3);margin-top:4px;}
+
+/* Insta preview */
+.ip{max-width:360px;}
+.ip-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.ip-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+  display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--white);font-weight:700;}
+.ip-handle{font-size:11px;font-weight:700;}
+.ip-img{background:var(--black);aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+  margin-bottom:10px;padding:28px;position:relative;overflow:hidden;}
+.ip-img-txt{font-family:var(--fd);font-size:20px;color:var(--white);line-height:1.25;text-align:center;z-index:1;}
+.ip-img-sub{position:absolute;bottom:14px;right:14px;font-family:var(--fm);font-size:8px;color:#333;}
+.ip-cap{font-size:11px;line-height:1.7;color:var(--ink2);white-space:pre-wrap;}
+.ip-tags{margin-top:7px;font-size:10px;color:#6b7280;line-height:1.8;}
+
+/* Blog preview */
+.bp{max-width:560px;}
+.bp-title{font-family:var(--fd);font-size:24px;line-height:1.2;margin-bottom:10px;}
+.bp-meta{font-family:var(--fm);font-size:8px;color:var(--ink3);letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule);}
+.bp-body{font-size:13px;line-height:1.85;color:var(--ink2);white-space:pre-wrap;}
+.bp-body strong{color:var(--ink);font-weight:700;}
+
+/* ── CALENDAR ── */
+.cal-wrap{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);}
+.cal-hd{background:var(--ink);color:var(--white);font-family:var(--fm);font-size:8px;
+  letter-spacing:.1em;text-transform:uppercase;padding:9px;text-align:center;}
+.cal-day{background:var(--white);padding:9px;min-height:80px;cursor:pointer;transition:background .15s;}
+.cal-day:hover{background:var(--cream);}
+.cal-day.today{background:#fff8ec;}
+.cal-day.empty{background:var(--cream);opacity:.5;}
+.cal-dn{font-family:var(--fm);font-size:10px;color:var(--ink3);margin-bottom:5px;}
+.cal-day.today .cal-dn{background:var(--ink);color:var(--accent);width:18px;height:18px;
+  display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:9px;}
+.cal-ev{font-size:8px;font-weight:700;padding:1px 4px;border-radius:1px;
+  margin-bottom:1px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.ev-mental{background:#d0e8d8;color:#1a5a30;}
+.ev-tip{background:#d0d8f0;color:#1a2a6a;}
+.ev-vocab{background:#f0e8d0;color:#6a4a10;}
+.ev-project{background:#f0d0d0;color:#6a1a1a;}
+
+/* ── DEEP DIVE ── */
+.dd-hero{background:var(--black);color:var(--white);padding:36px;
+  display:grid;grid-template-columns:1fr auto;gap:32px;align-items:start;}
+.dd-kicker{font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+.dd-name{font-family:var(--fd);font-size:44px;line-height:1.05;margin-bottom:8px;}
+.dd-tagline{font-size:13px;color:#888;line-height:1.6;}
+.dd-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;}
+.dd-tag{background:#1c1c1c;color:#666;font-family:var(--fm);font-size:8px;letter-spacing:.08em;padding:3px 9px;}
+.dd-tag.hl{color:var(--accent);}
+.meta-box{text-align:right;}
+.meta-item{margin-bottom:10px;}
+.meta-k{font-family:var(--fm);font-size:8px;letter-spacing:.12em;color:#444;text-transform:uppercase;margin-bottom:2px;}
+.meta-v{font-size:12px;font-weight:700;color:var(--white);}
+.feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);}
+.feat{background:var(--white);padding:22px;}
+.feat-num{font-family:var(--fm);font-size:28px;font-weight:500;color:var(--rule);margin-bottom:7px;line-height:1;}
+.feat-title{font-size:13px;font-weight:900;margin-bottom:5px;}
+.feat-desc{font-size:11px;color:var(--ink2);line-height:1.65;}
+.feat-prompt{background:var(--cream);border-left:3px solid var(--accent);padding:7px 11px;
+  margin-top:9px;font-family:var(--fm);font-size:9px;color:var(--ink2);line-height:1.55;}
+
+/* ── ARCHIVE ── */
+.archive-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;
+  background:var(--rule);border:1px solid var(--rule);}
+.arch-card{background:var(--white);padding:18px;cursor:pointer;transition:background .15s;}
+.arch-card:hover{background:var(--cream);}
+.arch-meta{font-family:var(--fm);font-size:8px;color:var(--ink3);letter-spacing:.08em;
+  text-transform:uppercase;margin-bottom:7px;display:flex;gap:8px;}
+.arch-title{font-family:var(--fd);font-size:14px;line-height:1.3;margin-bottom:7px;}
+.arch-prev{font-size:10px;color:var(--ink2);line-height:1.6;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.arch-dots{display:flex;gap:4px;margin-top:9px;}
+.arch-dot{width:6px;height:6px;border-radius:50%;}
+
+/* ── SETTINGS ── */
+.set-section{padding:24px;border-bottom:1px solid var(--rule);max-width:560px;}
+.set-title{font-family:var(--fd);font-size:18px;margin-bottom:14px;}
+.set-row{display:flex;align-items:center;justify-content:space-between;
+  padding:10px 0;border-bottom:1px solid var(--rule);}
+.set-row:last-child{border:none;}
+.set-lbl{font-size:12px;font-weight:700;margin-bottom:2px;}
+.set-desc{font-size:10px;color:var(--ink3);}
+.toggle{width:38px;height:20px;background:var(--rule);border-radius:10px;cursor:pointer;
+  position:relative;transition:background .2s;flex-shrink:0;}
+.toggle.on{background:var(--ink);}
+.toggle::after{content:'';position:absolute;width:14px;height:14px;background:var(--white);
+  border-radius:50%;top:3px;left:3px;transition:transform .2s;}
+.toggle.on::after{transform:translateX(18px);}
+.api-box{background:var(--cream);border:1px solid var(--rule);padding:14px;margin-top:10px;}
+.api-row{display:flex;gap:8px;}
+.api-in{flex:1;background:var(--white);border:1px solid var(--rule);
+  padding:7px 11px;font-family:var(--fm);font-size:10px;color:var(--ink);outline:none;}
+.api-st{font-family:var(--fm);font-size:8px;margin-top:6px;padding:4px 8px;}
+.api-st.ok{background:#d0e8d8;color:#1a5a30;}
+.api-st.no{background:#f0e8d0;color:#6a4a10;}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(10,10,10,.75);z-index:200;
+  display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--cream);width:min(760px,95vw);max-height:90vh;overflow-y:auto;border:1px solid var(--rule);}
+.modal-head{background:var(--black);color:var(--white);padding:18px 24px;
+  display:flex;align-items:center;justify-content:space-between;}
+.modal-head h3{font-family:var(--fm);font-size:10px;letter-spacing:.18em;text-transform:uppercase;}
+.modal-close{background:none;border:none;color:#555;font-size:16px;cursor:pointer;transition:color .2s;}
+.modal-close:hover{color:var(--white);}
+.modal-body{padding:24px;display:flex;flex-direction:column;gap:16px;}
+
+/* Thread preview in modal */
+.mp .mp-post{display:flex;gap:9px;margin-bottom:12px;position:relative;}
+.mp .mp-post::after{content:'';position:absolute;left:14px;top:32px;bottom:-4px;width:1px;background:var(--rule);}
+.mp .mp-post:last-child::after{display:none;}
+.mp-body{flex:1;}
+.mp-handle{font-size:10px;font-weight:700;margin-bottom:2px;}
+.mp-text{font-size:11px;line-height:1.65;color:var(--ink2);white-space:pre-line;}
+
+/* ── DIVIDER ── */
+.divider{display:flex;align-items:center;gap:12px;margin:18px 0;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--rule);}
+.divider-text{font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3);white-space:nowrap;}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--cream);}
+::-webkit-scrollbar-thumb{background:var(--rule);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="logo">STACKD <span>CONTENT STUDIO</span></div>
+  <nav class="masthead-tabs">
+    <button class="tab-btn active" onclick="showTab('magazine')">매거진</button>
+    <button class="tab-btn" onclick="showTab('posts')">포스트 관리</button>
+    <button class="tab-btn" onclick="showTab('studio')">✦ AI 변환</button>
+    <button class="tab-btn" onclick="showTab('archive')">아카이브</button>
+    <button class="tab-btn" onclick="showTab('calendar')">캘린더</button>
+    <button class="tab-btn" onclick="showTab('deepdive')">딥다이브</button>
+    <button class="tab-btn" onclick="showTab('settings')">설정</button>
+  </nav>
+  <div class="masthead-right">
+    <span class="badge" id="key-badge">API 키 미설정</span>
+    <button class="btn" style="font-size:9px;padding:8px 14px;" onclick="openModal()">+ 새 글</button>
+  </div>
+</header>
+
+<!-- ══════ 매거진 ══════ -->
+<div id="tab-magazine" class="page active">
+  <div class="hero">
+    <div class="hero-eye">STACKD CONTENT STUDIO · VOL.01 · 2026년 4월호</div>
+    <div class="hero-title">바이브코딩 <em>문화</em>를 큐레이팅합니다</div>
+    <div class="hero-sub">팁 · 영감 · 멘탈관리 · 프로젝트 소개 — 만들고. 쌓고. 써봐.</div>
+  </div>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sb-section">
+        <div class="sb-label">연재 시리즈</div>
+        <div class="series-item active" onclick="filterSeries('all',this)"><span class="si-name">전체 보기</span><span class="si-count">59</span></div>
+        <div class="series-item" onclick="filterSeries('mental',this)"><span class="si-name">바이브코딩 멘탈관리</span><span class="si-count">1</span></div>
+        <div class="series-item" onclick="filterSeries('tip',this)"><span class="si-name">꿀기능</span><span class="si-count">14</span></div>
+        <div class="series-item" onclick="filterSeries('vocab',this)"><span class="si-name">용어사전</span><span class="si-count">7</span></div>
+        <div class="series-item" onclick="filterSeries('guide',this)"><span class="si-name">바이브코딩 입문</span><span class="si-count">9</span></div>
+        <div class="series-item" onclick="filterSeries('inspo',this)"><span class="si-name">영감 큐레이션</span><span class="si-count">0</span></div>
+        <div class="series-item" onclick="filterSeries('project',this)"><span class="si-name">프로젝트 소개</span><span class="si-count">0</span></div>
+        <div class="series-item" onclick="filterSeries('stackd',this)"><span class="si-name">STACKD 사용법</span><span class="si-count">0</span></div>
+      </div>
+      <div class="sb-section">
+        <div class="sb-label">이번 주 현황</div>
+        <div class="week-row"><span class="wr-lbl">게시 완료</span><span class="wr-val">0</span></div>
+        <div class="week-row"><span class="wr-lbl">예약 대기</span><span class="wr-val">1</span></div>
+        <div class="week-row"><span class="wr-lbl">초안</span><span class="wr-val">3</span></div>
+        <div class="week-row"><span class="wr-lbl">이번 주 목표</span><span class="wr-val">3회</span></div>
+      </div>
+      <div class="sb-section">
+        <div class="sb-label">다음 게시 예정</div>
+        <div class="next-item"><div class="ni-date">월요일 · 오후 7시</div><div class="ni-title">[바이브코딩 멘탈관리 #1]</div><div class="ni-sub">조급해하지 말고 즐겨</div></div>
+      </div>
+      <button class="btn" style="width:100%;margin-top:4px;" onclick="openModal()">+ 새 포스트</button>
+    </aside>
+    <main class="main">
+      <div class="mag-cover">
+        <div class="cover-main">
+          <div class="cover-issue">이번 호 커버 스토리</div>
+          <div class="cover-title">바이브코딩을<br><em>취미로</em> 접근하면<br>어떨까</div>
+          <div class="cover-desc">수익화와 FOMO에 지치기 전에. 만들고 싶었던 걸 만들 수 있게 된 이 시대를 조급해하지 않고 즐기는 방법.</div>
+          <div style="margin-top:18px;display:flex;gap:10px;">
+            <button class="btn-outline" style="border-color:#333;color:#666;font-size:8px;" onclick="showTab('studio')">✦ AI로 변환</button>
+            <button class="btn-outline" style="border-color:#333;color:#666;font-size:8px;" onclick="showTab('posts')">포스트 관리</button>
+          </div>
+        </div>
+        <div class="cover-sidebar">
+          <div class="toc-label">이번 호 목차</div>
+          <div class="toc-item"><div class="toc-num">01</div><div><div class="toc-ttl">바이브코딩 멘탈관리 #1</div><div class="toc-cat">멘탈관리 · 예정</div></div></div>
+          <div class="toc-item"><div class="toc-num">02</div><div><div class="toc-ttl">꿀기능 — 자동저장·다크모드·JSON백업</div><div class="toc-cat">꿀기능 · 완성</div></div></div>
+          <div class="toc-item"><div class="toc-num">03</div><div><div class="toc-ttl">초보를 위한 바이브코딩 입문 4단계</div><div class="toc-cat">입문 · 완성</div></div></div>
+          <div class="toc-item"><div class="toc-num">04</div><div><div class="toc-ttl">용어사전 — 헤더·패딩·반응형</div><div class="toc-cat">용어사전 · 완성</div></div></div>
+          <div class="toc-item" style="border:none;"><div class="toc-num">05</div><div><div class="toc-ttl">STACKD — 파편화된 앱들의 연결</div><div class="toc-cat">서비스 소개 · 완성</div></div></div>
+        </div>
+      </div>
+      <div class="divider"><span class="divider-text">카테고리 큐레이션</span></div>
+      <div class="article-grid">
+        <div class="article-card" onclick="showTab('deepdive')">
+          <div class="ac-cat">프로젝트 딥다이브</div>
+          <div class="ac-title">STACKD — 바이브코딩 생태계를 연결하다</div>
+          <div class="ac-excerpt">파편화된 앱들을 한 화면에. 바이브코더가 만든 위젯들이 서로의 워크스페이스가 되는 선순환 생태계.</div>
+          <span class="ac-tag">STACKD</span>
+        </div>
+        <div class="article-card" onclick="showTab('studio')">
+          <div class="ac-cat">✦ AI 자동 변환</div>
+          <div class="ac-title">한 번 쓰고 스레드·인스타·블로그 동시 배포</div>
+          <div class="ac-excerpt">원고 하나를 입력하면 각 플랫폼에 맞게 AI가 자동으로 변환해줘. 복사해서 바로 올리면 끝.</div>
+          <span class="ac-tag">NEW</span>
+        </div>
+        <div class="article-card">
+          <div class="ac-cat">영감 큐레이션</div>
+          <div class="ac-title">초보가 도전하기 좋은 바이브코딩 주제 8가지</div>
+          <div class="ac-excerpt">할 일 앱, 가계부, 포모도로... 코딩 경험 없어도 만들 수 있는 첫 번째 프로젝트들.</div>
+          <span class="ac-tag">영감</span>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ══════ 포스트 관리 ══════ -->
+<div id="tab-posts" class="page">
+  <div class="hero">
+    <div class="hero-eye">포스트 관리</div>
+    <div class="hero-title">모든 <em>시리즈</em></div>
+    <div class="hero-sub">작성 완료 59장 · 예약 1개 · 초안 3개</div>
+  </div>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sb-label">필터</div>
+      <div class="series-item active" onclick="filterSeries('all',this)"><span class="si-name">전체</span><span class="si-count" id="cnt-all">0</span></div>
+      <div class="series-item" onclick="filterSeries('mental',this)"><span class="si-name">멘탈관리</span><span class="si-count" id="cnt-mental">0</span></div>
+      <div class="series-item" onclick="filterSeries('tip',this)"><span class="si-name">꿀기능</span><span class="si-count" id="cnt-tip">0</span></div>
+      <div class="series-item" onclick="filterSeries('vocab',this)"><span class="si-name">용어사전</span><span class="si-count" id="cnt-vocab">0</span></div>
+      <div class="series-item" onclick="filterSeries('guide',this)"><span class="si-name">입문</span><span class="si-count" id="cnt-guide">0</span></div>
+      <div class="series-item" onclick="filterSeries('inspo',this)"><span class="si-name">영감</span><span class="si-count" id="cnt-inspo">0</span></div>
+      <div class="series-item" onclick="filterSeries('project',this)"><span class="si-name">프로젝트</span><span class="si-count" id="cnt-project">0</span></div>
+      <div class="series-item" onclick="filterSeries('stackd',this)"><span class="si-name">STACKD</span><span class="si-count" id="cnt-stackd">0</span></div>
+    </aside>
+    <main class="main">
+      <div class="toolbar">
+        <h2>포스트 목록</h2>
+        <button class="btn" onclick="openModal()">+ 새 포스트</button>
+      </div>
+      <div class="posts-grid" id="posts-grid"></div>
+    </main>
+  </div>
+</div>
+
+<!-- ══════ AI 변환 스튜디오 ══════ -->
+<div id="tab-studio" class="page">
+  <div class="hero">
+    <div class="hero-eye">AI 콘텐츠 변환</div>
+    <div class="hero-title">한 번 쓰고 <em>모든 채널</em>로</div>
+    <div class="hero-sub">원본 글을 입력하면 스레드·인스타·블로그용으로 자동 변환됩니다</div>
+  </div>
+  <div class="studio-layout">
+    <div class="studio-input">
+      <div class="studio-section">
+        <div class="sb-label" style="margin-bottom:12px;">원본 콘텐츠</div>
+        <div class="form-group">
+          <div class="frow">
+            <div><label class="fl">시리즈</label>
+              <select class="fs" id="in-series">
+                <option value="mental">바이브코딩 멘탈관리</option>
+                <option value="tip">바이브코딩 꿀기능</option>
+                <option value="vocab">바이브코딩 용어사전</option>
+                <option value="guide">바이브코딩 입문</option>
+                <option value="inspo">바이브코딩 영감</option>
+                <option value="project">프로젝트 소개</option>
+                <option value="stackd">STACKD 사용법</option>
+              </select>
+            </div>
+            <div><label class="fl">회차</label><input type="number" class="fi" id="in-num" value="1" min="1"></div>
+          </div>
+        </div>
+        <div class="form-group"><label class="fl">제목 / 핵심 주제</label><input type="text" class="fi" id="in-title" placeholder="예: 조급해하지 말고 즐겨"></div>
+        <div class="form-group"><label class="fl">원본 글</label><textarea class="ft" id="in-body" placeholder="원고를 입력해봐. 키워드, 요점, 완성 글 모두 OK.&#10;AI가 각 플랫폼에 맞게 자동 변환해줄게."></textarea></div>
+        <div class="form-group"><label class="fl">톤 / 스타일</label>
+          <select class="fs" id="in-tone">
+            <option value="casual">캐주얼 (친근하게)</option>
+            <option value="insight">인사이트 (깊이 있게)</option>
+            <option value="howto">하우투 (단계별로)</option>
+            <option value="story">스토리 (감성적으로)</option>
+          </select>
+        </div>
+      </div>
+      <div class="studio-section">
+        <div class="sb-label" style="margin-bottom:12px;">변환할 플랫폼</div>
+        <div class="platform-grid">
+          <label class="ptog on" id="ptog-thread"><input type="checkbox" checked style="display:none" id="pchk-thread"><span class="pt-dot d-t"></span><span class="pt-name">스레드</span></label>
+          <label class="ptog on" id="ptog-insta"><input type="checkbox" checked style="display:none" id="pchk-insta"><span class="pt-dot d-i"></span><span class="pt-name">인스타그램</span></label>
+          <label class="ptog on" id="ptog-blog"><input type="checkbox" checked style="display:none" id="pchk-blog"><span class="pt-dot d-b"></span><span class="pt-name">블로그</span></label>
+          <label class="ptog" id="ptog-x"><input type="checkbox" style="display:none" id="pchk-x"><span class="pt-dot d-x"></span><span class="pt-name">X (트위터)</span></label>
+        </div>
+      </div>
+      <div style="padding:16px;">
+        <button class="btn-gen" id="btn-gen" onclick="generateContent()">
+          <span class="spinner" id="gen-spinner"></span>
+          <span id="btn-gen-text">✦ AI로 변환 생성</span>
+        </button>
+      </div>
+    </div>
+    <div class="studio-output">
+      <div id="empty-state" class="empty-state">
+        <div class="empty-icon">✦</div>
+        <div class="empty-title">변환 대기 중</div>
+        <div class="empty-desc">왼쪽에 원고를 입력하고<br>플랫폼 선택 후 변환 버튼을 눌러봐.</div>
+      </div>
+      <div id="output-container" style="display:none;">
+        <div class="output-header">
+          <div class="output-ttl" id="output-ttl">변환 결과</div>
+          <button class="btn" onclick="saveToArchive()">저장</button>
+        </div>
+        <div class="ptabs" id="ptabs"></div>
+        <div class="output-pane" id="pane-thread"><div class="out-card"><div class="out-card-head"><span class="out-platform">Threads · @vibestackd</span><div class="out-actions"><button class="btn-copy" onclick="copyPlatform('thread')">복사</button></div></div><div class="out-body tp" id="thread-out"></div></div></div>
+        <div class="output-pane" id="pane-insta"><div class="out-card"><div class="out-card-head"><span class="out-platform">Instagram · @vibestackd</span><div class="out-actions"><button class="btn-copy" onclick="copyPlatform('insta')">캡션 복사</button></div></div><div class="out-body"><div class="ip"><div class="ip-head"><div class="ip-av">VS</div><div class="ip-handle">@vibestackd</div></div><div class="ip-img"><div class="ip-img-txt" id="insta-cover"></div><div class="ip-img-sub">@vibestackd</div></div><div class="ip-cap" id="insta-cap"></div><div class="ip-tags" id="insta-tags"></div></div></div></div></div>
+        <div class="output-pane" id="pane-blog"><div class="out-card"><div class="out-card-head"><span class="out-platform">블로그 (티스토리 / 브런치 / 네이버)</span><div class="out-actions"><button class="btn-copy" onclick="copyPlatform('blog')">복사</button></div></div><div class="out-body bp" id="blog-out"></div></div></div>
+        <div class="output-pane" id="pane-x"><div class="out-card"><div class="out-card-head"><span class="out-platform">X (트위터) · @vibestackd</span><div class="out-actions"><button class="btn-copy" onclick="copyPlatform('x')">복사</button></div></div><div class="out-body tp" id="x-out"></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ 아카이브 ══════ -->
+<div id="tab-archive" class="page">
+  <div class="hero">
+    <div class="hero-eye">콘텐츠 아카이브</div>
+    <div class="hero-title">저장된 <em>변환 결과</em></div>
+    <div class="hero-sub">생성하고 저장한 콘텐츠 모음</div>
+  </div>
+  <div style="padding:28px 36px;">
+    <div id="archive-grid" class="archive-grid"></div>
+    <div id="archive-empty" style="text-align:center;padding:60px 0;display:none;">
+      <div style="font-family:var(--fd);font-size:20px;color:var(--ink3);">아직 저장된 콘텐츠가 없어</div>
+      <div style="font-size:12px;color:var(--ink3);margin-top:6px;">AI 변환 후 저장 버튼을 눌러봐.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ 캘린더 ══════ -->
+<div id="tab-calendar" class="page">
+  <div class="hero">
+    <div class="hero-eye">포스팅 캘린더</div>
+    <div class="hero-title">2026년 <em>4월</em></div>
+    <div class="hero-sub">주 3~4회 · 월·수·금 오후 7시 권장</div>
+  </div>
+  <div style="padding:28px 36px;">
+    <div class="cal-wrap">
+      <div class="cal-hd">MON</div><div class="cal-hd">TUE</div><div class="cal-hd">WED</div>
+      <div class="cal-hd">THU</div><div class="cal-hd">FRI</div><div class="cal-hd">SAT</div><div class="cal-hd">SUN</div>
+    </div>
+    <div id="cal-body" class="cal-wrap" style="grid-template-columns:repeat(7,1fr);"></div>
+    <div class="divider" style="margin-top:24px;"><span class="divider-text">범례</span></div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;">
+      <span class="cal-ev ev-mental">멘탈관리</span>
+      <span class="cal-ev ev-tip">꿀기능</span>
+      <span class="cal-ev ev-vocab">용어사전</span>
+      <span class="cal-ev ev-project">프로젝트</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ 딥다이브 ══════ -->
+<div id="tab-deepdive" class="page">
+  <div class="dd-hero">
+    <div>
+      <div class="dd-kicker">프로젝트 딥다이브 · #01</div>
+      <div class="dd-name">STACKD</div>
+      <div class="dd-tagline">바이브코딩 생태계를 한 대시보드에 연결하는 무료 개인 생산성 플랫폼</div>
+      <div class="dd-tags">
+        <span class="dd-tag">오픈소스 MIT</span>
+        <span class="dd-tag">GitHub Pages</span>
+        <span class="dd-tag">운영비 $0</span>
+        <span class="dd-tag hl">vibestackd.com</span>
+      </div>
+    </div>
+    <div class="meta-box">
+      <div class="meta-item"><div class="meta-k">제작자</div><div class="meta-v">@vibestackd</div></div>
+      <div class="meta-item"><div class="meta-k">기술 스택</div><div class="meta-v">HTML / CSS / JS</div></div>
+      <div class="meta-item"><div class="meta-k">데이터</div><div class="meta-v">localStorage</div></div>
+      <div class="meta-item"><div class="meta-k">상태</div><div class="meta-v" style="color:#6adb8a;">배포 완료</div></div>
+    </div>
+  </div>
+  <div style="padding:28px 36px;">
+    <div class="divider"><span class="divider-text">핵심 기능</span></div>
+    <div class="feat-grid">
+      <div class="feat"><div class="feat-num">01</div><div class="feat-title">위젯 갤러리</div><div class="feat-desc">커뮤니티가 만든 미니 앱을 골라서 내 화면에 추가.</div><div class="feat-prompt">"vibestackd.com/widgets 에서 위젯 추가하기"</div></div>
+      <div class="feat"><div class="feat-num">02</div><div class="feat-title">레고 조립 대시보드</div><div class="feat-desc">드래그·리사이즈로 원하는 대로 배치. 탭 전환 없이 한 화면에.</div><div class="feat-prompt">"URL 하나면 어떤 웹앱이든 임베드 가능"</div></div>
+      <div class="feat"><div class="feat-num">03</div><div class="feat-title">ZIP 백업 / 복원</div><div class="feat-desc">내 대시보드 전체를 ZIP으로 내보내고 언제든 복원.</div><div class="feat-prompt">"설정 → 내보내기 → ZIP 다운로드"</div></div>
+      <div class="feat"><div class="feat-num">04</div><div class="feat-title">완전 무료 · 제로 서버</div><div class="feat-desc">모든 데이터가 내 브라우저에만 저장. 구독료 없음.</div><div class="feat-prompt">"GitHub Pages 정적 호스팅, 운영비 $0"</div></div>
+    </div>
+    <div class="divider" style="margin-top:28px;"><span class="divider-text">스레드 글 아이디어</span></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);">
+      <div style="background:var(--white);padding:18px;"><div style="font-family:var(--fm);font-size:8px;color:var(--ink3);margin-bottom:6px;letter-spacing:.12em;text-transform:uppercase;">CATEGORY</div><div style="font-size:12px;font-weight:700;margin-bottom:5px;">STACKD 사용법 #1</div><div style="font-size:10px;color:var(--ink2);line-height:1.6;">GitHub Pages 링크로 내 앱 STACKD에 추가하는 법. 30초면 됨.</div><button class="btn-accent" style="margin-top:10px;font-size:8px;padding:6px 12px;" onclick="loadDeepDiveToStudio('STACKD 사용법 #1: GitHub Pages 링크로 내 앱을 STACKD에 추가하는 법을 설명해줘.')">✦ 변환</button></div>
+      <div style="background:var(--white);padding:18px;"><div style="font-family:var(--fm);font-size:8px;color:var(--ink3);margin-bottom:6px;letter-spacing:.12em;text-transform:uppercase;">CATEGORY</div><div style="font-size:12px;font-weight:700;margin-bottom:5px;">STACKD 사용법 #2</div><div style="font-size:10px;color:var(--ink2);line-height:1.6;">위젯 갤러리에서 다른 사람이 만든 앱을 내 화면에 추가하는 법.</div><button class="btn-accent" style="margin-top:10px;font-size:8px;padding:6px 12px;" onclick="loadDeepDiveToStudio('STACKD 사용법 #2: 위젯 갤러리에서 다른 사람이 만든 앱을 내 대시보드에 추가하는 방법을 설명해줘.')">✦ 변환</button></div>
+      <div style="background:var(--white);padding:18px;"><div style="font-family:var(--fm);font-size:8px;color:var(--ink3);margin-bottom:6px;letter-spacing:.12em;text-transform:uppercase;">COVER STORY</div><div style="font-size:12px;font-weight:700;margin-bottom:5px;">파편화된 앱들의 문제</div><div style="font-size:10px;color:var(--ink2);line-height:1.6;">만들었는데 결국 나만 쓰다 GitHub 구석에 방치되는 이유.</div><button class="btn-accent" style="margin-top:10px;font-size:8px;padding:6px 12px;" onclick="loadDeepDiveToStudio('바이브코딩으로 만든 앱이 GitHub 구석에 방치되는 이유와, STACKD가 이 파편화 문제를 해결하는 방법을 설명해줘.')">✦ 변환</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ 설정 ══════ -->
+<div id="tab-settings" class="page">
+  <div class="hero">
+    <div class="hero-eye">설정</div>
+    <div class="hero-title"><em>시스템</em> 설정</div>
+    <div class="hero-sub">API 키 및 계정 정보 설정</div>
+  </div>
+  <div style="padding:0 36px 36px;">
+    <div class="set-section">
+      <div class="set-title">Claude API 키</div>
+      <div style="font-size:11px;color:var(--ink2);line-height:1.7;margin-bottom:12px;">
+        AI 변환 기능을 쓰려면 Anthropic API 키가 필요해.<br>
+        <a href="https://console.anthropic.com" target="_blank" style="color:var(--ink);font-weight:700;">console.anthropic.com</a>에서 발급받을 수 있어.
+      </div>
+      <div class="api-box">
+        <div class="api-row">
+          <input type="password" class="api-in" id="api-key-in" placeholder="sk-ant-api03-...">
+          <button class="btn" onclick="saveApiKey()">저장</button>
+        </div>
+        <div id="api-st" class="api-st no" style="display:none;"></div>
+      </div>
+    </div>
+    <div class="set-section">
+      <div class="set-title">계정 정보</div>
+      <div class="form-group"><label class="fl">스레드 / 인스타 계정</label><input type="text" class="fi" id="set-handle" value="@vibestackd"></div>
+      <div class="form-group"><label class="fl">서비스 URL</label><input type="text" class="fi" id="set-url" value="vibestackd.com"></div>
+      <div class="form-group"><label class="fl">고정 해시태그 (쉼표로 구분)</label><input type="text" class="fi" id="set-tags" value="#바이브코딩, #사이드프로젝트, #AI코딩, #Claude"></div>
+      <button class="btn" onclick="saveSettings()">설정 저장</button>
+    </div>
+    <div class="set-section">
+      <div class="set-title">플랫폼 기본값</div>
+      <div class="set-row"><div><div class="set-lbl">스레드 기본 활성화</div><div class="set-desc">새 글 작성 시 스레드 기본 선택</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="set-row"><div><div class="set-lbl">인스타그램 기본 활성화</div><div class="set-desc">새 글 작성 시 인스타그램 기본 선택</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="set-row"><div><div class="set-lbl">블로그 기본 활성화</div><div class="set-desc">새 글 작성 시 블로그 기본 선택</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ 새 글 MODAL ══════ -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>새 포스트 작성</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="frow">
+        <div class="form-group"><label class="fl">시리즈</label>
+          <select class="fs" id="m-series" onchange="updateModalPreview()">
+            <option value="mental">바이브코딩 멘탈관리</option>
+            <option value="tip">바이브코딩 꿀기능</option>
+            <option value="vocab">바이브코딩 용어사전</option>
+            <option value="guide">바이브코딩 입문</option>
+            <option value="inspo">바이브코딩 영감</option>
+            <option value="project">프로젝트 소개</option>
+            <option value="stackd">STACKD 사용법</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="fl">회차</label><input type="number" class="fi" id="m-num" value="1" min="1" onchange="updateModalPreview()"></div>
+      </div>
+      <div class="form-group"><label class="fl">제목 / 한 줄 훅</label><input type="text" class="fi" id="m-title" placeholder="예: 조급해하지 말고 즐겨" oninput="updateModalPreview()"></div>
+      <div class="form-group"><label class="fl">본문</label><textarea class="ft" id="m-body" style="min-height:120px;" placeholder="스레드 글을 작성해봐." oninput="updateModalPreview()"></textarea></div>
+      <div class="frow">
+        <div class="form-group"><label class="fl">상태</label>
+          <select class="fs" id="m-status">
+            <option value="draft">초안</option>
+            <option value="ready">게시 준비</option>
+            <option value="published">게시 완료</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="fl">날짜</label><input type="date" class="fi" id="m-date"></div>
+      </div>
+
+      <!-- 미리보기 -->
+      <div style="background:var(--white);border:1px solid var(--rule);padding:16px;">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--rule);">스레드 미리보기</div>
+        <div class="mp">
+          <div class="mp-post">
+            <div class="av">ST</div>
+            <div class="mp-body">
+              <div class="mp-handle">@vibestackd</div>
+              <div class="mp-text" id="modal-preview">[시리즈 #1]\n\n내용이 여기 표시됩니다.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:space-between;">
+        <button class="btn-accent" onclick="sendToStudio()">✦ AI로 변환</button>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-outline" onclick="closeModal()">취소</button>
+          <button class="btn" onclick="savePost()">저장</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+const SERIES = {
+  mental:'바이브코딩 멘탈관리', tip:'바이브코딩 꿀기능',
+  vocab:'바이브코딩 용어사전', guide:'바이브코딩 입문',
+  inspo:'바이브코딩 영감', project:'프로젝트 소개', stackd:'STACKD 사용법'
+};
+let posts = JSON.parse(localStorage.getItem('stackd_posts2') || '[]');
+let archive = JSON.parse(localStorage.getItem('stackd_archive2') || '[]');
+let currentResult = null;
+
+if (!posts.length) {
+  posts = [
+    {id:1,series:'mental',num:1,title:'조급해하지 말고 즐겨',body:'바이브코딩 하다 보면\n"나도 수익화해야 하나..." FOMO 느끼지 않아?',status:'ready',date:'2026-04-28'},
+    {id:2,series:'tip',num:1,title:'자동저장 · 다크모드 · JSON백업',body:'Claude 한 마디로 해결되는 꿀기능 모음',status:'draft',date:'2026-04-30'},
+    {id:3,series:'guide',num:1,title:'AI 채팅 한 번으로 내 앱 만드는 법',body:'코딩 몰라도 됨. 준비물은 딱 3개.',status:'draft',date:'2026-05-02'},
+    {id:4,series:'vocab',num:1,title:'이 단어만 알면 Claude랑 대화가 달라진다',body:'헤더, 패딩, 반응형...',status:'draft',date:'2026-05-05'},
+  ];
+  savePosts();
+}
+
+function savePosts(){ localStorage.setItem('stackd_posts2', JSON.stringify(posts)); }
+
+// ── 탭 ──
+function showTab(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  const map = {magazine:0,posts:1,studio:2,archive:3,calendar:4,deepdive:5,settings:6};
+  document.querySelectorAll('.tab-btn')[map[name]]?.classList.add('active');
+  if (name === 'posts') renderPosts('all');
+  if (name === 'calendar') renderCalendar();
+  if (name === 'archive') renderArchive();
+}
+
+// ── 포스트 렌더 ──
+function renderPosts(filter) {
+  const grid = document.getElementById('posts-grid');
+  const filtered = filter === 'all' ? posts : posts.filter(p => p.series === filter);
+  // 카운트 업데이트
+  const keys = Object.keys(SERIES);
+  document.getElementById('cnt-all').textContent = posts.length;
+  keys.forEach(k => {
+    const el = document.getElementById('cnt-' + k);
+    if (el) el.textContent = posts.filter(p => p.series === k).length;
+  });
+  const statClass = {draft:'s-draft', ready:'s-ready', published:'s-pub'};
+  const statLabel = {draft:'초안', ready:'게시 준비', published:'게시 완료'};
+  grid.innerHTML = filtered.length ? filtered.map(p => `
+    <div class="post-card">
+      <div class="pc-tag"><span class="num">#${p.num}</span>${SERIES[p.series]||p.series}</div>
+      <div class="pc-title">${esc(p.title)}</div>
+      <div class="pc-preview">${esc(p.body)}</div>
+      <div class="pc-footer">
+        <span class="status ${statClass[p.status]||'s-draft'}">${statLabel[p.status]||p.status}</span>
+        <span class="pc-date">${p.date||'날짜 미정'}</span>
+      </div>
+    </div>`).join('') : '<div style="color:var(--ink3);font-size:13px;padding:40px 0;">포스트가 없어. 새 포스트를 작성해봐.</div>';
+}
+
+function filterSeries(type, el) {
+  document.querySelectorAll('.series-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  if (document.getElementById('tab-posts').classList.contains('active')) renderPosts(type);
+}
+
+// ── 캘린더 ──
+function renderCalendar() {
+  const body = document.getElementById('cal-body');
+  const year = 2026, month = 3;
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const offset = (firstDay + 6) % 7;
+  const scheduled = {28:[{cls:'ev-mental',lbl:'멘탈관리 #1'}],30:[{cls:'ev-tip',lbl:'꿀기능 #1'}]};
+  let html = '';
+  for (let i = 0; i < offset; i++) html += '<div class="cal-day empty"></div>';
+  const today = new Date();
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isToday = d === today.getDate() && today.getMonth() === month && today.getFullYear() === year;
+    const evts = scheduled[d] || [];
+    html += `<div class="cal-day ${isToday?'today':''}"><div class="cal-dn">${d}</div>${evts.map(e=>`<div class="cal-ev ${e.cls}">${e.lbl}</div>`).join('')}</div>`;
+  }
+  body.innerHTML = html;
+}
+
+// ── MODAL ──
+function openModal() {
+  document.getElementById('m-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('modal').classList.add('open');
+  updateModalPreview();
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+function updateModalPreview() {
+  const s = document.getElementById('m-series').value;
+  const n = document.getElementById('m-num').value;
+  const t = document.getElementById('m-title').value;
+  const b = document.getElementById('m-body').value;
+  const label = `[${SERIES[s]} #${n}]`;
+  document.getElementById('modal-preview').textContent = label + (t ? '\n\n' + t : '') + (b ? '\n\n' + b : '');
+}
+function savePost() {
+  const p = {
+    id: Date.now(),
+    series: document.getElementById('m-series').value,
+    num: parseInt(document.getElementById('m-num').value),
+    title: document.getElementById('m-title').value || '제목 없음',
+    body: document.getElementById('m-body').value,
+    status: document.getElementById('m-status').value,
+    date: document.getElementById('m-date').value
+  };
+  posts.unshift(p); savePosts(); closeModal();
+  if (document.getElementById('tab-posts').classList.contains('active')) renderPosts('all');
+}
+function sendToStudio() {
+  const s = document.getElementById('m-series').value;
+  const n = document.getElementById('m-num').value;
+  const t = document.getElementById('m-title').value;
+  const b = document.getElementById('m-body').value;
+  document.getElementById('in-series').value = s;
+  document.getElementById('in-num').value = n;
+  document.getElementById('in-title').value = t;
+  document.getElementById('in-body').value = b;
+  closeModal();
+  showTab('studio');
+}
+document.getElementById('modal').addEventListener('click', e => { if (e.target === document.getElementById('modal')) closeModal(); });
+
+// ── 플랫폼 토글 ──
+document.querySelectorAll('.ptog').forEach(tog => {
+  tog.addEventListener('click', () => {
+    const chk = tog.querySelector('input');
+    chk.checked = !chk.checked;
+    tog.classList.toggle('on', chk.checked);
+  });
+});
+
+// ── API KEY ──
+function getApiKey() { return localStorage.getItem('stackd_key') || ''; }
+function saveApiKey() {
+  const k = document.getElementById('api-key-in').value.trim();
+  if (!k) return;
+  localStorage.setItem('stackd_key', k);
+  const st = document.getElementById('api-st');
+  st.style.display = 'block'; st.className = 'api-st ok'; st.textContent = '✓ API 키 저장됨';
+  document.getElementById('key-badge').textContent = 'API 연결됨';
+  document.getElementById('key-badge').style.color = '#6adb8a';
+}
+function saveSettings() {
+  localStorage.setItem('stackd_handle', document.getElementById('set-handle').value);
+  localStorage.setItem('stackd_url', document.getElementById('set-url').value);
+  localStorage.setItem('stackd_tags', document.getElementById('set-tags').value);
+  alert('설정 저장 완료!');
+}
+
+// ── AI 변환 ──
+async function generateContent() {
+  const apiKey = getApiKey();
+  if (!apiKey) { alert('설정 탭에서 Claude API 키를 입력해줘!'); showTab('settings'); return; }
+  const body = document.getElementById('in-body').value.trim();
+  if (!body) { alert('원고를 입력해줘!'); return; }
+  const series = document.getElementById('in-series').value;
+  const num = document.getElementById('in-num').value;
+  const title = document.getElementById('in-title').value.trim();
+  const tone = document.getElementById('in-tone').value;
+  const platforms = ['thread','insta','blog','x'].filter(p => document.getElementById('pchk-'+p)?.checked);
+  const handle = localStorage.getItem('stackd_handle') || '@vibestackd';
+  const url = localStorage.getItem('stackd_url') || 'vibestackd.com';
+  const tags = localStorage.getItem('stackd_tags') || '#바이브코딩 #사이드프로젝트 #AI코딩';
+  const seriesLabel = `[${SERIES[series]} #${num}]`;
+  const toneMap = {casual:'친근하고 편안한 반말 톤.',insight:'통찰 있고 깊이 있는 톤.',howto:'단계별 실용적인 톤.',story:'공감 중심 감성적 스토리텔링 톤.'};
+  setLoading(true);
+  const prompt = `너는 ${handle} 계정의 콘텐츠 에디터야. 바이브코딩 관련 매거진 스타일 콘텐츠를 운영하고 있어.
+
+아래 원고를 각 플랫폼에 맞게 변환해줘:
+시리즈: ${seriesLabel}
+제목: ${title}
+원고: ${body}
+톤: ${toneMap[tone]}
+계정: ${handle} / URL: ${url} / 해시태그: ${tags}
+
+아래 JSON 형식으로만 응답해. 다른 텍스트 없이 순수 JSON만:
+{"thread":{"posts":[{"text":"내용","num":"1/N"}]},"insta":{"cover":"커버 문구 20자 이내","caption":"캡션","hashtags":"해시태그들"},"blog":{"title":"블로그 제목","meta":"작성일 · 시리즈 · 읽기 시간","body":"본문 (소제목은 [제목] 형식)"},"x":{"posts":[{"text":"280자 이내 트윗"}]}}
+
+스레드는 3~6개, X는 2~4개로 구성해. 각 플랫폼의 특성에 맞게 다르게 작성해.`;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:prompt}]})
+    });
+    const data = await res.json();
+    const raw = data.content?.[0]?.text || '';
+    const result = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    currentResult = {series,num,title,body,tone,platforms,result,date:new Date().toISOString()};
+    renderOutput(result, platforms, seriesLabel, title);
+  } catch(e) { alert('오류: ' + e.message); console.error(e); }
+  setLoading(false);
+}
+
+function setLoading(on) {
+  const btn = document.getElementById('btn-gen');
+  btn.classList.toggle('loading', on); btn.disabled = on;
+  document.getElementById('gen-spinner').style.display = on ? 'block' : 'none';
+  document.getElementById('btn-gen-text').textContent = on ? '변환 중...' : '✦ AI로 변환 생성';
+}
+
+function renderOutput(result, platforms, seriesLabel, title) {
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('output-container').style.display = 'block';
+  document.getElementById('output-ttl').textContent = title || seriesLabel;
+  const pMap = {thread:'스레드',insta:'인스타그램',blog:'블로그',x:'X'};
+  const tabsEl = document.getElementById('ptabs');
+  tabsEl.innerHTML = platforms.map((p,i) => `<div class="ptab ${i===0?'active':''}" onclick="switchPTab('${p}',this)">${pMap[p]}</div>`).join('');
+  document.querySelectorAll('.output-pane').forEach(p => p.classList.remove('active'));
+  if (platforms.length) switchPTab(platforms[0], tabsEl.querySelector('.ptab'));
+  if (result.thread) document.getElementById('thread-out').innerHTML = result.thread.posts.map(p=>`<div class="t-post"><div class="av">ST</div><div class="t-con"><div class="t-handle">@vibestackd</div><div class="t-text">${esc(p.text)}</div><div class="t-num">${p.num||''}</div></div></div>`).join('');
+  if (result.insta) { document.getElementById('insta-cover').textContent=result.insta.cover||''; document.getElementById('insta-cap').textContent=result.insta.caption||''; document.getElementById('insta-tags').textContent=result.insta.hashtags||''; }
+  if (result.blog) document.getElementById('blog-out').innerHTML=`<div class="bp-title">${esc(result.blog.title||'')}</div><div class="bp-meta">${esc(result.blog.meta||'')}</div><div class="bp-body">${esc(result.blog.body||'').replace(/\[([^\]]+)\]/g,'<strong>$1</strong>')}</div>`;
+  if (result.x) document.getElementById('x-out').innerHTML=result.x.posts.map((p,i)=>`<div class="t-post"><div class="av">VS</div><div class="t-con"><div class="t-handle">@vibestackd</div><div class="t-text">${esc(p.text)}</div><div class="t-num">${i+1}/${result.x.posts.length}</div></div></div>`).join('');
+}
+
+function switchPTab(platform, el) {
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.output-pane').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pane-'+platform)?.classList.add('active');
+}
+
+function copyPlatform(platform) {
+  if (!currentResult) return;
+  const r = currentResult.result;
+  let text = '';
+  if (platform==='thread'&&r.thread) text=r.thread.posts.map(p=>p.text).join('\n\n---\n\n');
+  if (platform==='insta'&&r.insta) text=r.insta.caption+'\n\n'+r.insta.hashtags;
+  if (platform==='blog'&&r.blog) text=r.blog.title+'\n\n'+r.blog.body;
+  if (platform==='x'&&r.x) text=r.x.posts.map(p=>p.text).join('\n\n---\n\n');
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = event.target;
+    const orig = btn.textContent;
+    btn.textContent='✓ 복사됨'; btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent=orig;btn.classList.remove('copied');},2000);
+  });
+}
+
+function saveToArchive() {
+  if (!currentResult) return;
+  archive.unshift(currentResult);
+  localStorage.setItem('stackd_archive2', JSON.stringify(archive.slice(0,50)));
+  alert('아카이브에 저장됐어!');
+}
+
+function renderArchive() {
+  const grid = document.getElementById('archive-grid');
+  const empty = document.getElementById('archive-empty');
+  if (!archive.length) { grid.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  const pColors = {thread:'#aaa',insta:'#833ab4',blog:'#2563eb',x:'#333'};
+  grid.innerHTML = archive.map((a,i)=>`
+    <div class="arch-card" onclick="loadArchiveItem(${i})">
+      <div class="arch-meta"><span>${SERIES[a.series]||''} #${a.num}</span><span>${new Date(a.date).toLocaleDateString('ko-KR')}</span></div>
+      <div class="arch-title">${esc(a.title||'제목 없음')}</div>
+      <div class="arch-prev">${esc(a.body||'')}</div>
+      <div class="arch-dots">${(a.platforms||[]).map(p=>`<div class="arch-dot" style="background:${pColors[p]||'#ccc'}"></div>`).join('')}</div>
+    </div>`).join('');
+}
+
+function loadArchiveItem(idx) {
+  const item = archive[idx];
+  if (!item) return;
+  document.getElementById('in-series').value = item.series;
+  document.getElementById('in-num').value = item.num;
+  document.getElementById('in-title').value = item.title||'';
+  document.getElementById('in-body').value = item.body||'';
+  document.getElementById('in-tone').value = item.tone||'casual';
+  currentResult = item;
+  renderOutput(item.result, item.platforms||['thread'], `[${SERIES[item.series]} #${item.num}]`, item.title);
+  showTab('studio');
+}
+
+function loadDeepDiveToStudio(content) {
+  document.getElementById('in-series').value = 'stackd';
+  document.getElementById('in-title').value = content.split(':')[0];
+  document.getElementById('in-body').value = content;
+  showTab('studio');
+}
+
+// ── 설정 초기화 ──
+(function init(){
+  const k = getApiKey();
+  if (k) { document.getElementById('api-key-in').value=k; document.getElementById('key-badge').textContent='API 연결됨'; document.getElementById('key-badge').style.color='#6adb8a'; }
+  const h = localStorage.getItem('stackd_handle'); if (h) document.getElementById('set-handle').value=h;
+  const u = localStorage.getItem('stackd_url'); if (u) document.getElementById('set-url').value=u;
+  const t = localStorage.getItem('stackd_tags'); if (t) document.getElementById('set-tags').value=t;
+  renderCalendar();
+  renderPosts('all');
+})();
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+</script>
+</body>
+</html>
