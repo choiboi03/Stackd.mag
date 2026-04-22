@@ -3,832 +3,1347 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>STACKD — 콘텐츠 스튜디오</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<title>STACKD OS</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --black:#0a0a0a;--white:#f5f2ec;--cream:#efeae0;
-  --ink:#1a1714;--ink2:#4a4540;--ink3:#8a8480;--rule:#d0cab8;
-  --accent:#c8a84b;--green:#2d5a3d;--red:#8b2c2c;
-  --fd:'DM Serif Display',serif;--fm:'DM Mono',monospace;--fb:'Noto Sans KR',sans-serif;
+  --bg:    #0c0c0e;
+  --bg1:   #111114;
+  --bg2:   #17171b;
+  --bg3:   #1e1e24;
+  --bg4:   #26262e;
+  --line:  #2a2a34;
+  --line2: #333340;
+  --t0:    #f0f0f4;
+  --t1:    #a0a0b0;
+  --t2:    #606070;
+  --t3:    #3a3a48;
+  --acc:   #e8ff47;
+  --acc2:  #47b3ff;
+  --acc3:  #ff6b6b;
+  --acc4:  #6bffb3;
+  --fm: 'IBM Plex Mono', monospace;
+  --fs: 'Instrument Serif', serif;
+  --fb: 'Noto Sans KR', sans-serif;
+  --r: 6px;
 }
-body{background:var(--cream);color:var(--ink);font-family:var(--fb);min-height:100vh;overflow-x:hidden;}
 
-/* ── MASTHEAD ── */
-.masthead{
-  background:var(--black);padding:0 40px;
-  display:flex;align-items:stretch;
-  border-bottom:1px solid #1c1c1c;
-  position:sticky;top:0;z-index:100;height:52px;
-}
-.logo{
-  font-family:var(--fm);font-size:12px;font-weight:500;color:var(--accent);
-  letter-spacing:.18em;text-transform:uppercase;
-  padding-right:28px;border-right:1px solid #1c1c1c;margin-right:0;
-  display:flex;flex-direction:column;justify-content:center;gap:2px;white-space:nowrap;
-}
-.logo span{font-size:8px;color:#444;letter-spacing:.2em;}
-.masthead-tabs{display:flex;flex:1;overflow-x:auto;}
-.masthead-tabs::-webkit-scrollbar{height:0;}
-.tab-btn{
-  background:none;border:none;color:#555;font-family:var(--fm);font-size:10px;
-  letter-spacing:.12em;text-transform:uppercase;padding:0 20px;cursor:pointer;
-  border-right:1px solid #1c1c1c;border-bottom:2px solid transparent;
-  transition:all .2s;white-space:nowrap;height:52px;
-}
-.tab-btn:hover{color:#aaa;}
-.tab-btn.active{color:var(--white);border-bottom-color:var(--accent);}
-.masthead-right{
-  display:flex;align-items:center;gap:12px;margin-left:auto;
-  padding-left:20px;border-left:1px solid #1c1c1c;
-}
-.badge{font-family:var(--fm);font-size:9px;color:#444;letter-spacing:.08em;white-space:nowrap;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);color:var(--t0);font-family:var(--fb);display:flex;flex-direction:column;}
 
-/* ── PAGES ── */
-.page{display:none;animation:fi .2s ease;}
-.page.active{display:block;}
-@keyframes fi{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+/* ── APP SHELL ── */
+.app{display:grid;grid-template-columns:220px 1fr;grid-template-rows:48px 1fr;height:100vh;}
 
-/* ── HERO ── */
-.hero{background:var(--black);color:var(--white);padding:36px 40px 32px;}
-.hero-eye{font-family:var(--fm);font-size:9px;letter-spacing:.2em;color:#444;
-  text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:12px;}
-.hero-eye::after{content:'';flex:1;height:1px;background:#1c1c1c;}
-.hero-title{font-family:var(--fd);font-size:40px;line-height:1.1;letter-spacing:-.01em;margin-bottom:6px;}
-.hero-title em{font-style:italic;color:var(--accent);}
-.hero-sub{font-size:12px;color:#666;}
-
-/* ── TWO-COL LAYOUT ── */
-.layout{display:grid;grid-template-columns:280px 1fr;min-height:calc(100vh - 104px);}
-.sidebar{border-right:1px solid var(--rule);background:var(--white);padding:24px 20px;}
-.main{padding:28px 36px;}
+/* ── TOPBAR ── */
+.topbar{
+  grid-column:1/-1;
+  background:var(--bg1);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;padding:0 16px;gap:0;
+  position:relative;z-index:50;
+}
+.topbar-logo{
+  font-family:var(--fm);font-size:13px;font-weight:600;
+  color:var(--acc);letter-spacing:.06em;margin-right:24px;
+  padding-right:24px;border-right:1px solid var(--line);
+  white-space:nowrap;
+}
+.topbar-logo span{font-size:9px;color:var(--t2);letter-spacing:.15em;display:block;margin-top:1px;}
+.topbar-center{flex:1;display:flex;align-items:center;gap:2px;}
+.tb-btn{
+  background:none;border:none;color:var(--t2);font-family:var(--fm);font-size:10px;
+  letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;cursor:pointer;
+  border-radius:4px;transition:all .15s;white-space:nowrap;
+}
+.tb-btn:hover{color:var(--t1);background:var(--bg3);}
+.tb-btn.act{color:var(--t0);background:var(--bg3);}
+.topbar-right{display:flex;align-items:center;gap:8px;margin-left:auto;}
+.api-dot{width:6px;height:6px;border-radius:50%;background:var(--t3);}
+.api-dot.on{background:var(--acc4);}
+.api-label{font-family:var(--fm);font-size:9px;color:var(--t2);}
+.btn-new{
+  background:var(--acc);color:var(--bg);border:none;font-family:var(--fm);
+  font-size:10px;font-weight:600;letter-spacing:.06em;padding:6px 14px;
+  border-radius:4px;cursor:pointer;transition:all .15s;
+}
+.btn-new:hover{background:#f5ff7a;}
 
 /* ── SIDEBAR ── */
-.sb-label{font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--ink3);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--rule);}
-.sb-section{margin-bottom:24px;}
-.series-item{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:7px 9px;border-radius:3px;cursor:pointer;transition:background .15s;margin-bottom:2px;
+.sidebar{
+  background:var(--bg1);border-right:1px solid var(--line);
+  overflow-y:auto;padding:12px 0;
 }
-.series-item:hover{background:var(--cream);}
-.series-item.active{background:var(--ink);color:var(--white);}
-.si-name{font-size:11px;font-weight:700;}
-.si-count{font-family:var(--fm);font-size:9px;color:var(--ink3);
-  background:var(--cream);padding:1px 5px;border-radius:8px;}
-.series-item.active .si-count{background:#333;color:#666;}
-.week-row{display:flex;justify-content:space-between;align-items:center;
-  padding:5px 0;border-bottom:1px solid var(--rule);}
-.week-row:last-child{border:none;}
-.wr-lbl{font-size:10px;color:var(--ink2);}
-.wr-val{font-family:var(--fm);font-size:11px;font-weight:500;}
-.next-item{background:var(--cream);padding:11px;border-left:3px solid var(--accent);}
-.ni-date{font-family:var(--fm);font-size:8px;color:var(--ink3);margin-bottom:3px;}
-.ni-title{font-size:11px;font-weight:700;}
-.ni-sub{font-size:10px;color:var(--ink2);margin-top:3px;}
+.sb-section{margin-bottom:20px;}
+.sb-title{font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--t3);padding:4px 16px 6px;display:flex;align-items:center;justify-content:space-between;}
+.sb-item{
+  display:flex;align-items:center;gap:8px;padding:6px 16px;cursor:pointer;
+  transition:all .12s;font-size:12px;color:var(--t1);
+}
+.sb-item:hover{background:var(--bg2);color:var(--t0);}
+.sb-item.act{background:var(--bg3);color:var(--t0);}
+.sb-item .dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.sb-item .label{flex:1;}
+.sb-item .cnt{font-family:var(--fm);font-size:9px;color:var(--t3);
+  background:var(--bg3);padding:1px 5px;border-radius:3px;}
+.sb-item.act .cnt{background:var(--bg4);}
+.sb-divider{height:1px;background:var(--line);margin:8px 0;}
+
+/* ── MAIN ── */
+.main{overflow:hidden;display:flex;flex-direction:column;}
+.view{display:none;flex:1;overflow:hidden;}
+.view.act{display:flex;flex-direction:column;}
+
+/* ── VIEW HEADER ── */
+.view-head{
+  padding:16px 24px 12px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+  background:var(--bg1);
+}
+.view-title{font-family:var(--fs);font-size:22px;letter-spacing:-.01em;}
+.view-title em{font-style:italic;color:var(--acc);}
+.view-meta{font-family:var(--fm);font-size:9px;color:var(--t2);margin-top:2px;}
+.head-actions{display:flex;gap:8px;}
 
 /* ── BUTTONS ── */
-.btn{background:var(--ink);color:var(--white);border:none;font-family:var(--fm);
-  font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:9px 16px;cursor:pointer;transition:background .2s;}
-.btn:hover{background:var(--green);}
-.btn-outline{background:none;border:1px solid var(--ink);color:var(--ink);font-family:var(--fm);
-  font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:8px 14px;cursor:pointer;transition:all .2s;}
-.btn-outline:hover{background:var(--ink);color:var(--white);}
-.btn-accent{background:var(--accent);color:var(--black);border:none;font-family:var(--fm);
-  font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:9px 16px;cursor:pointer;transition:all .2s;}
-.btn-accent:hover{background:#e0c060;}
+.btn{background:var(--bg3);color:var(--t1);border:1px solid var(--line2);font-family:var(--fm);
+  font-size:10px;letter-spacing:.06em;padding:6px 12px;border-radius:4px;cursor:pointer;transition:all .15s;}
+.btn:hover{background:var(--bg4);color:var(--t0);}
+.btn.prim{background:var(--acc);color:var(--bg);border-color:var(--acc);}
+.btn.prim:hover{background:#f5ff7a;}
+.btn.danger{border-color:#ff4444;color:#ff6b6b;}
+.btn.danger:hover{background:#ff444418;}
+.btn-icon{background:none;border:none;color:var(--t2);font-size:14px;cursor:pointer;
+  padding:4px 6px;border-radius:4px;transition:all .15s;line-height:1;}
+.btn-icon:hover{background:var(--bg3);color:var(--t0);}
 
-/* ── CARDS ── */
-.posts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
-.post-card{
-  background:var(--white);border:1px solid var(--rule);padding:18px;
-  cursor:pointer;transition:all .18s;position:relative;overflow:hidden;
+/* ── DASHBOARD ── */
+.dash-scroll{flex:1;overflow-y:auto;padding:20px 24px;}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
+.stat-card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;}
+.stat-num{font-family:var(--fm);font-size:28px;font-weight:600;color:var(--t0);line-height:1;margin-bottom:4px;}
+.stat-num.acc{color:var(--acc);}
+.stat-num.blue{color:var(--acc2);}
+.stat-num.red{color:var(--acc3);}
+.stat-num.green{color:var(--acc4);}
+.stat-label{font-family:var(--fm);font-size:9px;color:var(--t2);letter-spacing:.1em;text-transform:uppercase;}
+
+.dash-grid{display:grid;grid-template-columns:1fr 320px;gap:12px;}
+.section-label{font-family:var(--fm);font-size:9px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--t2);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--line);}
+
+/* ── PIPELINE ── */
+.pipeline-wrap{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;}
+.pipeline-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:0;}
+.pipeline-col{border-right:1px solid var(--line);padding:12px;}
+.pipeline-col:last-child{border-right:none;}
+.pc-head{font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--t2);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+.pc-count{background:var(--bg3);padding:1px 6px;border-radius:3px;color:var(--t3);}
+.pc-item{
+  background:var(--bg);border:1px solid var(--line);border-radius:4px;
+  padding:10px;margin-bottom:6px;cursor:pointer;transition:all .15s;
 }
-.post-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;
-  background:var(--rule);transition:background .2s;}
-.post-card:hover::before{background:var(--accent);}
-.post-card:hover{border-color:#bbb;transform:translateY(-1px);box-shadow:0 3px 12px rgba(0,0,0,.06);}
-.pc-tag{font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--ink3);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
-.pc-tag .num{background:var(--ink);color:var(--accent);padding:1px 5px;font-size:8px;}
-.pc-title{font-family:var(--fd);font-size:16px;line-height:1.3;margin-bottom:7px;}
-.pc-preview{font-size:11px;color:var(--ink2);line-height:1.6;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.pc-footer{display:flex;align-items:center;justify-content:space-between;
-  margin-top:12px;padding-top:10px;border-top:1px solid var(--rule);}
-.status{font-family:var(--fm);font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:2px;}
-.s-draft{background:#f0e8d0;color:#8a6c20;}
-.s-ready{background:#d0e8d8;color:#1a5a30;}
-.s-pub{background:#1a1714;color:#666;}
-.pc-date{font-family:var(--fm);font-size:9px;color:var(--ink3);}
+.pc-item:hover{border-color:var(--line2);background:var(--bg1);}
+.pc-series{font-family:var(--fm);font-size:8px;color:var(--t2);margin-bottom:4px;}
+.pc-title{font-size:12px;font-weight:700;line-height:1.4;margin-bottom:6px;}
+.pc-date{font-family:var(--fm);font-size:9px;color:var(--t3);}
 
-/* ── TOOLBAR ── */
-.toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
-.toolbar h2{font-family:var(--fd);font-size:24px;letter-spacing:-.01em;}
+/* ── WEEK PLANNER ── */
+.week-box{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:12px;}
+.week-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.wd{border:1px solid var(--line);border-radius:4px;padding:8px 6px;min-height:80px;cursor:pointer;
+  transition:all .15s;}
+.wd:hover{border-color:var(--line2);}
+.wd.today{border-color:var(--acc);background:rgba(232,255,71,.04);}
+.wd-name{font-family:var(--fm);font-size:8px;color:var(--t2);text-align:center;margin-bottom:4px;letter-spacing:.08em;}
+.wd-num{font-family:var(--fm);font-size:11px;color:var(--t1);text-align:center;margin-bottom:6px;}
+.wd.today .wd-num{color:var(--acc);}
+.wd-ev{font-size:8px;font-weight:700;padding:2px 4px;border-radius:2px;
+  margin-bottom:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.ev-m{background:rgba(107,255,179,.12);color:var(--acc4);}
+.ev-t{background:rgba(71,179,255,.12);color:var(--acc2);}
+.ev-v{background:rgba(232,255,71,.12);color:var(--acc);}
+.ev-g{background:rgba(255,107,107,.12);color:var(--acc3);}
 
-/* ── MAGAZINE LAYOUT ── */
-.mag-cover{
-  display:grid;grid-template-columns:1fr 340px;gap:1px;
-  background:var(--rule);border:1px solid var(--rule);margin-bottom:20px;
+/* ── KANBAN (POST LIST) ── */
+.posts-wrap{flex:1;overflow-y:auto;padding:16px 24px;}
+.kanban-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.filter-btn{background:none;border:1px solid var(--line);color:var(--t2);font-family:var(--fm);
+  font-size:9px;letter-spacing:.06em;padding:4px 10px;border-radius:20px;cursor:pointer;transition:all .15s;}
+.filter-btn:hover{border-color:var(--line2);color:var(--t1);}
+.filter-btn.act{background:var(--acc);color:var(--bg);border-color:var(--acc);}
+
+.post-table{width:100%;border-collapse:collapse;}
+.post-table th{font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--t3);text-align:left;padding:6px 12px;border-bottom:1px solid var(--line);
+  background:var(--bg1);position:sticky;top:0;z-index:1;}
+.post-table td{padding:10px 12px;border-bottom:1px solid var(--line);font-size:12px;vertical-align:middle;}
+.post-table tr:hover td{background:var(--bg2);}
+.post-table tr.selected td{background:rgba(232,255,71,.04);}
+.tr-series{font-family:var(--fm);font-size:9px;color:var(--t2);}
+.tr-num{font-family:var(--fm);font-size:10px;font-weight:600;color:var(--acc);}
+.tr-title{font-weight:700;}
+.tr-status{display:inline-flex;align-items:center;gap:5px;font-family:var(--fm);font-size:9px;
+  padding:3px 8px;border-radius:3px;white-space:nowrap;}
+.s-idea{background:rgba(96,96,112,.15);color:var(--t2);}
+.s-draft{background:rgba(71,179,255,.12);color:var(--acc2);}
+.s-ready{background:rgba(232,255,71,.12);color:var(--acc);}
+.s-done{background:rgba(107,255,179,.12);color:var(--acc4);}
+.tr-date{font-family:var(--fm);font-size:9px;color:var(--t3);}
+.tr-actions{display:flex;gap:4px;opacity:0;transition:opacity .15s;}
+.post-table tr:hover .tr-actions{opacity:1;}
+
+/* ── EDITOR ── */
+.editor-wrap{flex:1;display:grid;grid-template-columns:1fr 340px;overflow:hidden;}
+.editor-main{border-right:1px solid var(--line);display:flex;flex-direction:column;overflow:hidden;}
+.editor-form{padding:20px 24px;overflow-y:auto;flex:1;}
+.ed-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.ed-full{margin-bottom:14px;}
+.ed-label{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--t2);display:block;margin-bottom:5px;}
+.ed-input,.ed-select,.ed-textarea{
+  width:100%;background:var(--bg2);border:1px solid var(--line);
+  padding:9px 12px;font-family:var(--fb);font-size:13px;color:var(--t0);
+  outline:none;border-radius:4px;transition:border-color .15s;
 }
-.cover-main{background:var(--black);color:var(--white);padding:36px;position:relative;overflow:hidden;}
-.cover-main::after{content:'COVER';position:absolute;right:-24px;top:24px;
-  font-family:var(--fm);font-size:72px;font-weight:500;color:rgba(255,255,255,.03);letter-spacing:-4px;}
-.cover-issue{font-family:var(--fm);font-size:8px;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:16px;}
-.cover-title{font-family:var(--fd);font-size:36px;line-height:1.1;margin-bottom:12px;}
-.cover-title em{font-style:italic;color:var(--accent);}
-.cover-desc{font-size:12px;color:#888;line-height:1.7;max-width:380px;}
-.cover-sidebar{background:var(--white);padding:24px 20px;}
-.toc-label{font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--ink3);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--ink);}
-.toc-item{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid var(--rule);cursor:pointer;}
-.toc-item:hover{opacity:.7;}
-.toc-item:last-child{border:none;}
-.toc-num{font-family:var(--fm);font-size:9px;color:var(--ink3);min-width:18px;margin-top:1px;}
-.toc-ttl{font-size:11px;font-weight:700;line-height:1.35;}
-.toc-cat{font-family:var(--fm);font-size:8px;color:var(--ink3);margin-top:1px;}
+.ed-input:focus,.ed-select:focus,.ed-textarea:focus{border-color:var(--line2);}
+.ed-textarea{resize:vertical;min-height:180px;line-height:1.75;font-size:13px;}
+.ed-textarea.large{min-height:280px;}
+.editor-sidebar{padding:16px;overflow-y:auto;background:var(--bg1);}
+.es-section{margin-bottom:20px;}
+.es-label{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--t3);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line);}
 
-.article-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
-  background:var(--rule);border:1px solid var(--rule);margin-bottom:16px;}
-.article-card{background:var(--white);padding:20px;cursor:pointer;transition:background .15s;}
-.article-card:hover{background:var(--cream);}
-.ac-cat{font-family:var(--fm);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;}
-.ac-title{font-family:var(--fd);font-size:15px;line-height:1.3;margin-bottom:7px;}
-.ac-excerpt{font-size:11px;color:var(--ink2);line-height:1.6;
-  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
-.ac-tag{display:inline-block;background:var(--ink);color:var(--white);
-  font-family:var(--fm);font-size:7px;letter-spacing:.1em;padding:2px 6px;margin-top:10px;}
+/* ── THREAD PREVIEW ── */
+.tprev .tp{display:flex;gap:8px;margin-bottom:10px;position:relative;}
+.tprev .tp::after{content:'';position:absolute;left:12px;top:28px;bottom:-4px;
+  width:1px;background:var(--line);}
+.tprev .tp:last-child::after{display:none;}
+.tp-av{width:24px;height:24px;background:var(--bg3);border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:7px;color:var(--acc);}
+.tp-con{flex:1;}
+.tp-handle{font-size:10px;font-weight:700;color:var(--t1);margin-bottom:2px;}
+.tp-text{font-size:11px;color:var(--t1);line-height:1.6;white-space:pre-wrap;}
+.tp-num{font-family:var(--fm);font-size:8px;color:var(--t3);margin-top:3px;}
 
-/* ── AI STUDIO: INPUT ── */
-.studio-layout{display:grid;grid-template-columns:320px 1fr;min-height:calc(100vh - 104px);}
-.studio-input{border-right:1px solid var(--rule);background:var(--white);display:flex;flex-direction:column;}
-.studio-section{padding:20px;border-bottom:1px solid var(--rule);}
-.form-group{margin-bottom:14px;}
-.fl{font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:5px;}
-.fi,.fs,.ft{width:100%;background:var(--cream);border:1px solid var(--rule);
-  padding:8px 11px;font-family:var(--fb);font-size:12px;color:var(--ink);outline:none;transition:border-color .2s;}
-.fi:focus,.fs:focus,.ft:focus{border-color:var(--ink);}
-.ft{resize:vertical;min-height:130px;line-height:1.7;}
-.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+/* ── AI STUDIO ── */
+.studio-wrap{flex:1;display:grid;grid-template-columns:300px 1fr;overflow:hidden;}
+.studio-left{border-right:1px solid var(--line);padding:16px;overflow-y:auto;background:var(--bg1);}
+.studio-right{padding:20px 24px;overflow-y:auto;}
+.studio-source{background:var(--bg2);border:1px solid var(--line);border-radius:4px;
+  padding:12px;margin-bottom:12px;cursor:pointer;transition:all .15s;}
+.studio-source:hover{border-color:var(--line2);}
+.studio-source.sel{border-color:var(--acc);background:rgba(232,255,71,.04);}
+.ss-series{font-family:var(--fm);font-size:8px;color:var(--t2);margin-bottom:3px;}
+.ss-title{font-size:12px;font-weight:700;}
+.ptog-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px;}
+.ptog{display:flex;align-items:center;gap:6px;padding:7px 10px;
+  border:1px solid var(--line);border-radius:4px;cursor:pointer;
+  transition:all .15s;user-select:none;}
+.ptog:hover{border-color:var(--line2);}
+.ptog.on{border-color:var(--acc);background:rgba(232,255,71,.06);}
+.ptog.on .pt-n{color:var(--acc);}
+.pt-d{width:5px;height:5px;border-radius:50%;}
+.d-t{background:#aaa;}.d-i{background:#c13584;}.d-b{background:#2563eb;}.d-x{background:#555;}
+.pt-n{font-family:var(--fm);font-size:9px;letter-spacing:.06em;color:var(--t2);}
 
-.platform-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
-.ptog{
-  display:flex;align-items:center;gap:7px;padding:9px 11px;
-  border:1px solid var(--rule);cursor:pointer;transition:all .2s;background:var(--cream);
-  user-select:none;
-}
-.ptog:hover{border-color:var(--ink3);}
-.ptog.on{background:var(--ink);border-color:var(--ink);}
-.ptog.on .pt-name{color:var(--white);}
-.pt-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-.d-t{background:#aaa;}.d-i{background:#833ab4;}.d-b{background:#2563eb;}.d-x{background:#555;}
-.pt-name{font-family:var(--fm);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);}
+.btn-gen{width:100%;background:var(--acc);color:var(--bg);border:none;font-family:var(--fm);
+  font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  padding:12px;border-radius:4px;cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-gen:hover{background:#f5ff7a;}
+.btn-gen.loading{background:var(--bg4);color:var(--t2);cursor:not-allowed;}
+.spin{width:10px;height:10px;border:1.5px solid var(--t3);border-top-color:var(--acc);
+  border-radius:50%;animation:sp .7s linear infinite;display:none;}
+.btn-gen.loading .spin{display:block;}
+@keyframes sp{to{transform:rotate(360deg)}}
 
-.btn-gen{
-  width:100%;background:var(--ink);color:var(--white);border:none;
-  font-family:var(--fm);font-size:10px;letter-spacing:.15em;text-transform:uppercase;
-  padding:14px;cursor:pointer;transition:background .2s;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-}
-.btn-gen:hover{background:var(--green);}
-.btn-gen.loading{background:#333;cursor:not-allowed;}
-.spinner{width:11px;height:11px;border:1.5px solid #555;border-top-color:var(--accent);
-  border-radius:50%;animation:spin .8s linear infinite;display:none;}
-.btn-gen.loading .spinner{display:block;}
-@keyframes spin{to{transform:rotate(360deg)}}
+.out-tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin-bottom:16px;}
+.otab{font-family:var(--fm);font-size:9px;letter-spacing:.08em;text-transform:uppercase;
+  padding:7px 14px;cursor:pointer;border-bottom:2px solid transparent;color:var(--t2);transition:all .15s;}
+.otab:hover{color:var(--t1);}
+.otab.act{color:var(--t0);border-bottom-color:var(--acc);}
+.out-pane{display:none;}
+.out-pane.act{display:block;}
+.out-block{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);
+  margin-bottom:12px;overflow:hidden;}
+.ob-head{background:var(--bg3);padding:8px 14px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--line);}
+.ob-platform{font-family:var(--fm);font-size:9px;color:var(--t2);letter-spacing:.08em;}
+.ob-body{padding:14px;}
+.btn-copy{background:none;border:1px solid var(--line);color:var(--t2);font-family:var(--fm);
+  font-size:8px;padding:3px 9px;border-radius:3px;cursor:pointer;transition:all .15s;}
+.btn-copy:hover{border-color:var(--line2);color:var(--t0);}
+.btn-copy.ok{border-color:var(--acc4);color:var(--acc4);}
 
-/* ── AI STUDIO: OUTPUT ── */
-.studio-output{padding:28px;background:var(--cream);}
-.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;text-align:center;}
-.empty-icon{font-size:40px;margin-bottom:14px;opacity:.25;}
-.empty-title{font-family:var(--fd);font-size:22px;color:var(--ink);margin-bottom:6px;}
-.empty-desc{font-size:12px;color:var(--ink3);line-height:1.6;}
-
-.output-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
-.output-ttl{font-family:var(--fd);font-size:24px;letter-spacing:-.01em;}
-.ptabs{display:flex;gap:0;border-bottom:1px solid var(--rule);margin-bottom:20px;}
-.ptab{font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
-  padding:7px 14px;cursor:pointer;border-bottom:2px solid transparent;color:var(--ink3);transition:all .2s;}
-.ptab:hover{color:var(--ink);}
-.ptab.active{color:var(--ink);border-bottom-color:var(--ink);}
-.output-pane{display:none;}
-.output-pane.active{display:block;}
-
-.out-card{background:var(--white);border:1px solid var(--rule);margin-bottom:14px;overflow:hidden;}
-.out-card-head{background:var(--black);color:var(--white);padding:9px 14px;
-  display:flex;align-items:center;justify-content:space-between;}
-.out-platform{font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#666;}
-.out-actions{display:flex;gap:7px;}
-.btn-copy{background:none;border:1px solid #333;color:#777;font-family:var(--fm);
-  font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;cursor:pointer;transition:all .2s;}
-.btn-copy:hover{border-color:#888;color:var(--white);}
-.btn-copy.copied{border-color:var(--accent);color:var(--accent);}
-.out-body{padding:18px;}
-
-/* Thread preview */
-.tp .t-post{display:flex;gap:9px;margin-bottom:12px;position:relative;}
-.tp .t-post::after{content:'';position:absolute;left:14px;top:32px;bottom:-4px;width:1px;background:var(--rule);}
-.tp .t-post:last-child::after{display:none;}
-.av{width:28px;height:28px;background:var(--ink);border-radius:50%;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:7px;color:var(--accent);}
-.t-con{flex:1;}
-.t-handle{font-size:10px;font-weight:700;margin-bottom:2px;}
-.t-text{font-size:11px;line-height:1.65;color:var(--ink2);white-space:pre-wrap;}
-.t-num{font-family:var(--fm);font-size:8px;color:var(--ink3);margin-top:4px;}
-
-/* Insta preview */
-.ip{max-width:360px;}
-.ip-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
-.ip-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
-  display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--white);font-weight:700;}
-.ip-handle{font-size:11px;font-weight:700;}
-.ip-img{background:var(--black);aspect-ratio:1;display:flex;align-items:center;justify-content:center;
-  margin-bottom:10px;padding:28px;position:relative;overflow:hidden;}
-.ip-img-txt{font-family:var(--fd);font-size:20px;color:var(--white);line-height:1.25;text-align:center;z-index:1;}
-.ip-img-sub{position:absolute;bottom:14px;right:14px;font-family:var(--fm);font-size:8px;color:#333;}
-.ip-cap{font-size:11px;line-height:1.7;color:var(--ink2);white-space:pre-wrap;}
-.ip-tags{margin-top:7px;font-size:10px;color:#6b7280;line-height:1.8;}
-
-/* Blog preview */
-.bp{max-width:560px;}
-.bp-title{font-family:var(--fd);font-size:24px;line-height:1.2;margin-bottom:10px;}
-.bp-meta{font-family:var(--fm);font-size:8px;color:var(--ink3);letter-spacing:.1em;text-transform:uppercase;
-  margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule);}
-.bp-body{font-size:13px;line-height:1.85;color:var(--ink2);white-space:pre-wrap;}
-.bp-body strong{color:var(--ink);font-weight:700;}
-
-/* ── CALENDAR ── */
-.cal-wrap{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);}
-.cal-hd{background:var(--ink);color:var(--white);font-family:var(--fm);font-size:8px;
-  letter-spacing:.1em;text-transform:uppercase;padding:9px;text-align:center;}
-.cal-day{background:var(--white);padding:9px;min-height:80px;cursor:pointer;transition:background .15s;}
-.cal-day:hover{background:var(--cream);}
-.cal-day.today{background:#fff8ec;}
-.cal-day.empty{background:var(--cream);opacity:.5;}
-.cal-dn{font-family:var(--fm);font-size:10px;color:var(--ink3);margin-bottom:5px;}
-.cal-day.today .cal-dn{background:var(--ink);color:var(--accent);width:18px;height:18px;
-  display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:9px;}
-.cal-ev{font-size:8px;font-weight:700;padding:1px 4px;border-radius:1px;
-  margin-bottom:1px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
-.ev-mental{background:#d0e8d8;color:#1a5a30;}
-.ev-tip{background:#d0d8f0;color:#1a2a6a;}
-.ev-vocab{background:#f0e8d0;color:#6a4a10;}
-.ev-project{background:#f0d0d0;color:#6a1a1a;}
-
-/* ── DEEP DIVE ── */
-.dd-hero{background:var(--black);color:var(--white);padding:36px;
-  display:grid;grid-template-columns:1fr auto;gap:32px;align-items:start;}
-.dd-kicker{font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
-.dd-name{font-family:var(--fd);font-size:44px;line-height:1.05;margin-bottom:8px;}
-.dd-tagline{font-size:13px;color:#888;line-height:1.6;}
-.dd-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;}
-.dd-tag{background:#1c1c1c;color:#666;font-family:var(--fm);font-size:8px;letter-spacing:.08em;padding:3px 9px;}
-.dd-tag.hl{color:var(--accent);}
-.meta-box{text-align:right;}
-.meta-item{margin-bottom:10px;}
-.meta-k{font-family:var(--fm);font-size:8px;letter-spacing:.12em;color:#444;text-transform:uppercase;margin-bottom:2px;}
-.meta-v{font-size:12px;font-weight:700;color:var(--white);}
-.feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);}
-.feat{background:var(--white);padding:22px;}
-.feat-num{font-family:var(--fm);font-size:28px;font-weight:500;color:var(--rule);margin-bottom:7px;line-height:1;}
-.feat-title{font-size:13px;font-weight:900;margin-bottom:5px;}
-.feat-desc{font-size:11px;color:var(--ink2);line-height:1.65;}
-.feat-prompt{background:var(--cream);border-left:3px solid var(--accent);padding:7px 11px;
-  margin-top:9px;font-family:var(--fm);font-size:9px;color:var(--ink2);line-height:1.55;}
-
-/* ── ARCHIVE ── */
-.archive-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;
-  background:var(--rule);border:1px solid var(--rule);}
-.arch-card{background:var(--white);padding:18px;cursor:pointer;transition:background .15s;}
-.arch-card:hover{background:var(--cream);}
-.arch-meta{font-family:var(--fm);font-size:8px;color:var(--ink3);letter-spacing:.08em;
-  text-transform:uppercase;margin-bottom:7px;display:flex;gap:8px;}
-.arch-title{font-family:var(--fd);font-size:14px;line-height:1.3;margin-bottom:7px;}
-.arch-prev{font-size:10px;color:var(--ink2);line-height:1.6;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.arch-dots{display:flex;gap:4px;margin-top:9px;}
-.arch-dot{width:6px;height:6px;border-radius:50%;}
+/* insta cover preview */
+.insta-cover-preview{background:var(--bg);aspect-ratio:1;max-width:200px;
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  margin-bottom:10px;border:1px solid var(--line);border-radius:4px;position:relative;}
+.icp-text{font-family:var(--fs);font-size:18px;color:var(--t0);line-height:1.25;text-align:center;}
+.icp-watermark{position:absolute;bottom:8px;right:10px;font-family:var(--fm);font-size:7px;color:var(--t3);}
+.insta-caption{font-size:12px;color:var(--t1);line-height:1.7;white-space:pre-wrap;margin-bottom:8px;}
+.insta-tags{font-size:10px;color:var(--acc2);line-height:1.8;}
+.blog-title{font-family:var(--fs);font-size:20px;margin-bottom:6px;line-height:1.2;}
+.blog-meta{font-family:var(--fm);font-size:8px;color:var(--t2);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--line);}
+.blog-body{font-size:12px;color:var(--t1);line-height:1.85;white-space:pre-wrap;}
+.blog-body strong{color:var(--t0);font-weight:700;}
 
 /* ── SETTINGS ── */
-.set-section{padding:24px;border-bottom:1px solid var(--rule);max-width:560px;}
-.set-title{font-family:var(--fd);font-size:18px;margin-bottom:14px;}
+.settings-wrap{flex:1;overflow-y:auto;padding:20px 24px;max-width:640px;}
+.set-card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px;margin-bottom:14px;}
+.set-card-title{font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--t1);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--line);}
 .set-row{display:flex;align-items:center;justify-content:space-between;
-  padding:10px 0;border-bottom:1px solid var(--rule);}
+  padding:8px 0;border-bottom:1px solid var(--line);}
 .set-row:last-child{border:none;}
-.set-lbl{font-size:12px;font-weight:700;margin-bottom:2px;}
-.set-desc{font-size:10px;color:var(--ink3);}
-.toggle{width:38px;height:20px;background:var(--rule);border-radius:10px;cursor:pointer;
-  position:relative;transition:background .2s;flex-shrink:0;}
-.toggle.on{background:var(--ink);}
-.toggle::after{content:'';position:absolute;width:14px;height:14px;background:var(--white);
+.set-info .sl{font-size:12px;font-weight:700;margin-bottom:2px;}
+.set-info .sd{font-size:10px;color:var(--t2);}
+.tog{width:36px;height:20px;background:var(--bg4);border-radius:10px;cursor:pointer;
+  position:relative;transition:background .2s;flex-shrink:0;border:1px solid var(--line);}
+.tog.on{background:var(--acc);}
+.tog::after{content:'';position:absolute;width:12px;height:12px;background:var(--t1);
   border-radius:50%;top:3px;left:3px;transition:transform .2s;}
-.toggle.on::after{transform:translateX(18px);}
-.api-box{background:var(--cream);border:1px solid var(--rule);padding:14px;margin-top:10px;}
-.api-row{display:flex;gap:8px;}
-.api-in{flex:1;background:var(--white);border:1px solid var(--rule);
-  padding:7px 11px;font-family:var(--fm);font-size:10px;color:var(--ink);outline:none;}
-.api-st{font-family:var(--fm);font-size:8px;margin-top:6px;padding:4px 8px;}
-.api-st.ok{background:#d0e8d8;color:#1a5a30;}
-.api-st.no{background:#f0e8d0;color:#6a4a10;}
+.tog.on::after{transform:translateX(16px);background:var(--bg);}
+.api-row{display:flex;gap:8px;margin-top:10px;}
+.api-in{flex:1;background:var(--bg);border:1px solid var(--line);
+  padding:8px 11px;font-family:var(--fm);font-size:11px;color:var(--t0);outline:none;border-radius:4px;}
+.api-in:focus{border-color:var(--line2);}
+.api-note{font-family:var(--fm);font-size:9px;margin-top:6px;padding:5px 9px;border-radius:3px;}
+.api-note.ok{background:rgba(107,255,179,.12);color:var(--acc4);}
+.api-note.no{background:rgba(255,107,107,.1);color:var(--acc3);}
 
 /* ── MODAL ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(10,10,10,.75);z-index:200;
-  display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
-.modal-overlay.open{display:flex;}
-.modal{background:var(--cream);width:min(760px,95vw);max-height:90vh;overflow-y:auto;border:1px solid var(--rule);}
-.modal-head{background:var(--black);color:var(--white);padding:18px 24px;
-  display:flex;align-items:center;justify-content:space-between;}
-.modal-head h3{font-family:var(--fm);font-size:10px;letter-spacing:.18em;text-transform:uppercase;}
-.modal-close{background:none;border:none;color:#555;font-size:16px;cursor:pointer;transition:color .2s;}
-.modal-close:hover{color:var(--white);}
-.modal-body{padding:24px;display:flex;flex-direction:column;gap:16px;}
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;
+  display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+.modal-ov.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--line2);border-radius:8px;
+  width:min(680px,95vw);max-height:88vh;overflow-y:auto;
+  box-shadow:0 24px 60px rgba(0,0,0,.5);}
+.modal-head{padding:16px 20px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:1;}
+.modal-head h3{font-family:var(--fm);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--t1);}
+.modal-body{padding:20px;}
+.modal-footer{padding:14px 20px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:center;gap:8px;
+  position:sticky;bottom:0;background:var(--bg2);}
 
-/* Thread preview in modal */
-.mp .mp-post{display:flex;gap:9px;margin-bottom:12px;position:relative;}
-.mp .mp-post::after{content:'';position:absolute;left:14px;top:32px;bottom:-4px;width:1px;background:var(--rule);}
-.mp .mp-post:last-child::after{display:none;}
-.mp-body{flex:1;}
-.mp-handle{font-size:10px;font-weight:700;margin-bottom:2px;}
-.mp-text{font-size:11px;line-height:1.65;color:var(--ink2);white-space:pre-line;}
+/* ── EMPTY ── */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;
+  padding:40px;text-align:center;}
+.empty-icon{font-size:36px;opacity:.2;margin-bottom:12px;}
+.empty-title{font-family:var(--fs);font-size:20px;color:var(--t1);margin-bottom:6px;}
+.empty-desc{font-size:12px;color:var(--t2);line-height:1.6;}
 
-/* ── DIVIDER ── */
-.divider{display:flex;align-items:center;gap:12px;margin:18px 0;}
-.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--rule);}
-.divider-text{font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3);white-space:nowrap;}
+/* ── SCROLLBARS ── */
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
+::-webkit-scrollbar-thumb:hover{background:var(--line2);}
 
-::-webkit-scrollbar{width:4px;}
-::-webkit-scrollbar-track{background:var(--cream);}
-::-webkit-scrollbar-thumb{background:var(--rule);border-radius:2px;}
+/* ── FILE STATUS BAR ── */
+.file-bar{
+  display:flex;align-items:center;gap:8px;padding:0 14px;
+  border-left:1px solid var(--line);margin-left:8px;
+}
+.file-name{font-family:var(--fm);font-size:9px;color:var(--t2);max-width:160px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.file-name.linked{color:var(--acc4);}
+.save-dot{width:6px;height:6px;border-radius:50%;background:var(--t3);transition:all .3s;}
+.save-dot.dirty{background:var(--acc3);box-shadow:0 0 6px var(--acc3);}
+.save-dot.saving{background:var(--acc);animation:pulse .6s ease infinite;}
+.save-dot.saved{background:var(--acc4);}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.btn-file{background:none;border:1px solid var(--line);color:var(--t2);font-family:var(--fm);
+  font-size:9px;letter-spacing:.06em;padding:4px 10px;border-radius:4px;cursor:pointer;
+  transition:all .15s;white-space:nowrap;}
+.btn-file:hover{border-color:var(--line2);color:var(--t0);}
+.btn-file.prim{border-color:var(--acc4);color:var(--acc4);}
+.btn-file.prim:hover{background:rgba(107,255,179,.08);}
+
+/* ── WELCOME SCREEN ── */
+.welcome-ov{
+  position:fixed;inset:0;background:var(--bg);z-index:300;
+  display:flex;align-items:center;justify-content:center;
+}
+.welcome-box{
+  background:var(--bg2);border:1px solid var(--line2);border-radius:12px;
+  padding:40px;width:min(480px,90vw);
+  box-shadow:0 24px 60px rgba(0,0,0,.5);
+}
+.wl-logo{font-family:var(--fm);font-size:13px;color:var(--acc);letter-spacing:.1em;margin-bottom:4px;}
+.wl-sub{font-family:var(--fm);font-size:9px;color:var(--t3);letter-spacing:.15em;text-transform:uppercase;margin-bottom:28px;}
+.wl-title{font-family:var(--fs);font-size:28px;line-height:1.2;margin-bottom:8px;}
+.wl-title em{font-style:italic;color:var(--acc);}
+.wl-desc{font-size:12px;color:var(--t2);line-height:1.7;margin-bottom:28px;}
+.wl-actions{display:flex;flex-direction:column;gap:10px;}
+.wl-btn{
+  display:flex;align-items:center;gap:12px;padding:14px 16px;
+  border:1px solid var(--line2);border-radius:6px;cursor:pointer;
+  transition:all .15s;background:none;text-align:left;width:100%;
+}
+.wl-btn:hover{border-color:var(--line);background:var(--bg3);}
+.wl-btn.prim{border-color:var(--acc);background:rgba(232,255,71,.05);}
+.wl-btn.prim:hover{background:rgba(232,255,71,.1);}
+.wl-btn-icon{font-size:20px;width:32px;text-align:center;flex-shrink:0;}
+.wl-btn-text .t{font-size:13px;font-weight:700;color:var(--t0);display:block;margin-bottom:2px;}
+.wl-btn-text .d{font-family:var(--fm);font-size:9px;color:var(--t2);}
+
+/* ── QUICK CAPTURE BAR ── */
+.quick-bar{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:var(--bg3);border:1px solid var(--line2);border-radius:8px;
+  padding:10px 14px;display:flex;align-items:center;gap:10px;
+  box-shadow:0 8px 32px rgba(0,0,0,.4);z-index:100;
+  width:min(480px,90vw);
+  opacity:0;pointer-events:none;transition:all .2s;
+}
+.quick-bar.show{opacity:1;pointer-events:all;}
+.qb-input{flex:1;background:none;border:none;color:var(--t0);font-family:var(--fb);
+  font-size:13px;outline:none;}
+.qb-input::placeholder{color:var(--t3);}
+.qb-hint{font-family:var(--fm);font-size:9px;color:var(--t3);}
 </style>
 </head>
 <body>
+<div class="app">
 
-<!-- MASTHEAD -->
-<header class="masthead">
-  <div class="logo">STACKD <span>CONTENT STUDIO</span></div>
-  <nav class="masthead-tabs">
-    <button class="tab-btn active" onclick="showTab('magazine')">매거진</button>
-    <button class="tab-btn" onclick="showTab('posts')">포스트 관리</button>
-    <button class="tab-btn" onclick="showTab('studio')">✦ AI 변환</button>
-    <button class="tab-btn" onclick="showTab('archive')">아카이브</button>
-    <button class="tab-btn" onclick="showTab('calendar')">캘린더</button>
-    <button class="tab-btn" onclick="showTab('deepdive')">딥다이브</button>
-    <button class="tab-btn" onclick="showTab('settings')">설정</button>
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-logo">STACKD<span>CONTENT OS</span></div>
+  <nav class="topbar-center">
+    <button class="tb-btn act" onclick="nav('dash')">대시보드</button>
+    <button class="tb-btn" onclick="nav('posts')">포스트</button>
+    <button class="tb-btn" onclick="nav('editor')">에디터</button>
+    <button class="tb-btn" onclick="nav('studio')">✦ AI 변환</button>
+    <button class="tb-btn" onclick="nav('settings')">설정</button>
   </nav>
-  <div class="masthead-right">
-    <span class="badge" id="key-badge">API 키 미설정</span>
-    <button class="btn" style="font-size:9px;padding:8px 14px;" onclick="openModal()">+ 새 글</button>
+  <div class="topbar-right">
+    <div class="file-bar">
+      <div class="save-dot" id="save-dot"></div>
+      <span class="file-name" id="file-name-label">파일 없음</span>
+    </div>
+    <button class="btn-file" onclick="openFile()">📂 열기</button>
+    <button class="btn-file prim" onclick="saveFile()" id="btn-save">💾 저장</button>
+    <div class="api-dot" id="api-dot" style="margin-left:8px;"></div>
+    <span class="api-label" id="api-label">API 미연결</span>
+    <button class="btn-new" onclick="openNew()">+ 새 글</button>
   </div>
 </header>
 
-<!-- ══════ 매거진 ══════ -->
-<div id="tab-magazine" class="page active">
-  <div class="hero">
-    <div class="hero-eye">STACKD CONTENT STUDIO · VOL.01 · 2026년 4월호</div>
-    <div class="hero-title">바이브코딩 <em>문화</em>를 큐레이팅합니다</div>
-    <div class="hero-sub">팁 · 영감 · 멘탈관리 · 프로젝트 소개 — 만들고. 쌓고. 써봐.</div>
+<!-- WELCOME SCREEN -->
+<div class="welcome-ov" id="welcome-ov">
+  <div class="welcome-box">
+    <div class="wl-logo">STACKD</div>
+    <div class="wl-sub">CONTENT OS · 개인 운영 도구</div>
+    <div class="wl-title">시작하려면 <em>파일을</em><br>선택해줘</div>
+    <div class="wl-desc">모든 데이터는 네가 선택한 JSON 파일에 저장돼.<br>로컬 파일로 관리하니까 브라우저를 초기화해도 안전해.</div>
+    <div class="wl-actions">
+      <button class="wl-btn prim" onclick="openFile()">
+        <span class="wl-btn-icon">📂</span>
+        <div class="wl-btn-text"><span class="t">기존 파일 열기</span><span class="d">stackd-os.json 파일 선택</span></div>
+      </button>
+      <button class="wl-btn" onclick="createNewFile()">
+        <span class="wl-btn-icon">✨</span>
+        <div class="wl-btn-text"><span class="t">새 파일로 시작</span><span class="d">빈 데이터로 새로 시작하기</span></div>
+      </button>
+    </div>
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);font-family:var(--fm);font-size:9px;color:var(--t3);text-align:center;">⌘S 저장 · ⌘K 빠른 캡처 · ⌘O 파일 열기</div>
   </div>
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="sb-section">
-        <div class="sb-label">연재 시리즈</div>
-        <div class="series-item active" onclick="filterSeries('all',this)"><span class="si-name">전체 보기</span><span class="si-count">59</span></div>
-        <div class="series-item" onclick="filterSeries('mental',this)"><span class="si-name">바이브코딩 멘탈관리</span><span class="si-count">1</span></div>
-        <div class="series-item" onclick="filterSeries('tip',this)"><span class="si-name">꿀기능</span><span class="si-count">14</span></div>
-        <div class="series-item" onclick="filterSeries('vocab',this)"><span class="si-name">용어사전</span><span class="si-count">7</span></div>
-        <div class="series-item" onclick="filterSeries('guide',this)"><span class="si-name">바이브코딩 입문</span><span class="si-count">9</span></div>
-        <div class="series-item" onclick="filterSeries('inspo',this)"><span class="si-name">영감 큐레이션</span><span class="si-count">0</span></div>
-        <div class="series-item" onclick="filterSeries('project',this)"><span class="si-name">프로젝트 소개</span><span class="si-count">0</span></div>
-        <div class="series-item" onclick="filterSeries('stackd',this)"><span class="si-name">STACKD 사용법</span><span class="si-count">0</span></div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-section">
+    <div class="sb-title">시리즈</div>
+    <div class="sb-item act" onclick="filterSeries('all',this)">
+      <div class="dot" style="background:var(--t3)"></div>
+      <span class="label">전체</span>
+      <span class="cnt" id="cnt-all">0</span>
+    </div>
+    <div class="sb-item" onclick="filterSeries('mental',this)">
+      <div class="dot" style="background:var(--acc4)"></div>
+      <span class="label">멘탈관리</span>
+      <span class="cnt" id="cnt-mental">0</span>
+    </div>
+    <div class="sb-item" onclick="filterSeries('tip',this)">
+      <div class="dot" style="background:var(--acc2)"></div>
+      <span class="label">꿀기능</span>
+      <span class="cnt" id="cnt-tip">0</span>
+    </div>
+    <div class="sb-item" onclick="filterSeries('vocab',this)">
+      <div class="dot" style="background:var(--acc)"></div>
+      <span class="label">용어사전</span>
+      <span class="cnt" id="cnt-vocab">0</span>
+    </div>
+    <div class="sb-item" onclick="filterSeries('guide',this)">
+      <div class="dot" style="background:var(--acc3)"></div>
+      <span class="label">바이브코딩 입문</span>
+      <span class="cnt" id="cnt-guide">0</span>
+    </div>
+    <div class="sb-item" onclick="filterSeries('inspo',this)">
+      <div class="dot" style="background:#b47fff"></div>
+      <span class="label">영감 큐레이션</span>
+      <span class="cnt" id="cnt-inspo">0</span>
+    </div>
+    <div class="sb-item" onclick="filterSeries('project',this)">
+      <div class="dot" style="background:#ff9f47"></div>
+      <span class="label">프로젝트 소개</span>
+      <span class="cnt" id="cnt-project">0</span>
+    </div>
+    <div class="sb-item" onclick="filterSeries('stackd',this)">
+      <div class="dot" style="background:var(--acc)"></div>
+      <span class="label">STACKD 사용법</span>
+      <span class="cnt" id="cnt-stackd">0</span>
+    </div>
+  </div>
+
+  <div class="sb-divider"></div>
+
+  <div class="sb-section">
+    <div class="sb-title">파이프라인</div>
+    <div class="sb-item" onclick="filterStatus('idea',this)">
+      <div class="dot" style="background:var(--t3)"></div>
+      <span class="label">아이디어</span>
+      <span class="cnt" id="cnt-idea">0</span>
+    </div>
+    <div class="sb-item" onclick="filterStatus('draft',this)">
+      <div class="dot" style="background:var(--acc2)"></div>
+      <span class="label">초안</span>
+      <span class="cnt" id="cnt-draft">0</span>
+    </div>
+    <div class="sb-item" onclick="filterStatus('ready',this)">
+      <div class="dot" style="background:var(--acc)"></div>
+      <span class="label">게시 준비</span>
+      <span class="cnt" id="cnt-ready">0</span>
+    </div>
+    <div class="sb-item" onclick="filterStatus('done',this)">
+      <div class="dot" style="background:var(--acc4)"></div>
+      <span class="label">게시 완료</span>
+      <span class="cnt" id="cnt-done">0</span>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- ── 대시보드 ── -->
+  <div id="view-dash" class="view act">
+    <div class="view-head">
+      <div>
+        <div class="view-title">대시보드</div>
+        <div class="view-meta" id="dash-meta">로딩 중...</div>
       </div>
-      <div class="sb-section">
-        <div class="sb-label">이번 주 현황</div>
-        <div class="week-row"><span class="wr-lbl">게시 완료</span><span class="wr-val">0</span></div>
-        <div class="week-row"><span class="wr-lbl">예약 대기</span><span class="wr-val">1</span></div>
-        <div class="week-row"><span class="wr-lbl">초안</span><span class="wr-val">3</span></div>
-        <div class="week-row"><span class="wr-lbl">이번 주 목표</span><span class="wr-val">3회</span></div>
+    </div>
+    <div class="dash-scroll">
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-num acc" id="s-total">0</div><div class="stat-label">총 포스트</div></div>
+        <div class="stat-card"><div class="stat-num blue" id="s-draft">0</div><div class="stat-label">초안</div></div>
+        <div class="stat-card"><div class="stat-num" id="s-ready">0</div><div class="stat-label">게시 준비</div></div>
+        <div class="stat-card"><div class="stat-num green" id="s-done">0</div><div class="stat-label">게시 완료</div></div>
       </div>
-      <div class="sb-section">
-        <div class="sb-label">다음 게시 예정</div>
-        <div class="next-item"><div class="ni-date">월요일 · 오후 7시</div><div class="ni-title">[바이브코딩 멘탈관리 #1]</div><div class="ni-sub">조급해하지 말고 즐겨</div></div>
-      </div>
-      <button class="btn" style="width:100%;margin-top:4px;" onclick="openModal()">+ 새 포스트</button>
-    </aside>
-    <main class="main">
-      <div class="mag-cover">
-        <div class="cover-main">
-          <div class="cover-issue">이번 호 커버 스토리</div>
-          <div class="cover-title">바이브코딩을<br><em>취미로</em> 접근하면<br>어떨까</div>
-          <div class="cover-desc">수익화와 FOMO에 지치기 전에. 만들고 싶었던 걸 만들 수 있게 된 이 시대를 조급해하지 않고 즐기는 방법.</div>
-          <div style="margin-top:18px;display:flex;gap:10px;">
-            <button class="btn-outline" style="border-color:#333;color:#666;font-size:8px;" onclick="showTab('studio')">✦ AI로 변환</button>
-            <button class="btn-outline" style="border-color:#333;color:#666;font-size:8px;" onclick="showTab('posts')">포스트 관리</button>
+
+      <div class="dash-grid">
+        <div>
+          <div class="section-label">이번 주 계획</div>
+          <div class="week-box"><div class="week-days" id="week-days"></div></div>
+
+          <div class="section-label" style="margin-top:16px;">파이프라인</div>
+          <div class="pipeline-wrap">
+            <div class="pipeline-cols">
+              <div class="pipeline-col">
+                <div class="pc-head">아이디어 <span class="pc-count" id="pipe-idea">0</span></div>
+                <div id="pipe-idea-list"></div>
+              </div>
+              <div class="pipeline-col">
+                <div class="pc-head">초안 <span class="pc-count" id="pipe-draft">0</span></div>
+                <div id="pipe-draft-list"></div>
+              </div>
+              <div class="pipeline-col">
+                <div class="pc-head">게시 준비 <span class="pc-count" id="pipe-ready">0</span></div>
+                <div id="pipe-ready-list"></div>
+              </div>
+              <div class="pipeline-col">
+                <div class="pc-head">게시 완료 <span class="pc-count" id="pipe-done">0</span></div>
+                <div id="pipe-done-list"></div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="cover-sidebar">
-          <div class="toc-label">이번 호 목차</div>
-          <div class="toc-item"><div class="toc-num">01</div><div><div class="toc-ttl">바이브코딩 멘탈관리 #1</div><div class="toc-cat">멘탈관리 · 예정</div></div></div>
-          <div class="toc-item"><div class="toc-num">02</div><div><div class="toc-ttl">꿀기능 — 자동저장·다크모드·JSON백업</div><div class="toc-cat">꿀기능 · 완성</div></div></div>
-          <div class="toc-item"><div class="toc-num">03</div><div><div class="toc-ttl">초보를 위한 바이브코딩 입문 4단계</div><div class="toc-cat">입문 · 완성</div></div></div>
-          <div class="toc-item"><div class="toc-num">04</div><div><div class="toc-ttl">용어사전 — 헤더·패딩·반응형</div><div class="toc-cat">용어사전 · 완성</div></div></div>
-          <div class="toc-item" style="border:none;"><div class="toc-num">05</div><div><div class="toc-ttl">STACKD — 파편화된 앱들의 연결</div><div class="toc-cat">서비스 소개 · 완성</div></div></div>
-        </div>
-      </div>
-      <div class="divider"><span class="divider-text">카테고리 큐레이션</span></div>
-      <div class="article-grid">
-        <div class="article-card" onclick="showTab('deepdive')">
-          <div class="ac-cat">프로젝트 딥다이브</div>
-          <div class="ac-title">STACKD — 바이브코딩 생태계를 연결하다</div>
-          <div class="ac-excerpt">파편화된 앱들을 한 화면에. 바이브코더가 만든 위젯들이 서로의 워크스페이스가 되는 선순환 생태계.</div>
-          <span class="ac-tag">STACKD</span>
-        </div>
-        <div class="article-card" onclick="showTab('studio')">
-          <div class="ac-cat">✦ AI 자동 변환</div>
-          <div class="ac-title">한 번 쓰고 스레드·인스타·블로그 동시 배포</div>
-          <div class="ac-excerpt">원고 하나를 입력하면 각 플랫폼에 맞게 AI가 자동으로 변환해줘. 복사해서 바로 올리면 끝.</div>
-          <span class="ac-tag">NEW</span>
-        </div>
-        <div class="article-card">
-          <div class="ac-cat">영감 큐레이션</div>
-          <div class="ac-title">초보가 도전하기 좋은 바이브코딩 주제 8가지</div>
-          <div class="ac-excerpt">할 일 앱, 가계부, 포모도로... 코딩 경험 없어도 만들 수 있는 첫 번째 프로젝트들.</div>
-          <span class="ac-tag">영감</span>
-        </div>
-      </div>
-    </main>
-  </div>
-</div>
 
-<!-- ══════ 포스트 관리 ══════ -->
-<div id="tab-posts" class="page">
-  <div class="hero">
-    <div class="hero-eye">포스트 관리</div>
-    <div class="hero-title">모든 <em>시리즈</em></div>
-    <div class="hero-sub">작성 완료 59장 · 예약 1개 · 초안 3개</div>
-  </div>
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="sb-label">필터</div>
-      <div class="series-item active" onclick="filterSeries('all',this)"><span class="si-name">전체</span><span class="si-count" id="cnt-all">0</span></div>
-      <div class="series-item" onclick="filterSeries('mental',this)"><span class="si-name">멘탈관리</span><span class="si-count" id="cnt-mental">0</span></div>
-      <div class="series-item" onclick="filterSeries('tip',this)"><span class="si-name">꿀기능</span><span class="si-count" id="cnt-tip">0</span></div>
-      <div class="series-item" onclick="filterSeries('vocab',this)"><span class="si-name">용어사전</span><span class="si-count" id="cnt-vocab">0</span></div>
-      <div class="series-item" onclick="filterSeries('guide',this)"><span class="si-name">입문</span><span class="si-count" id="cnt-guide">0</span></div>
-      <div class="series-item" onclick="filterSeries('inspo',this)"><span class="si-name">영감</span><span class="si-count" id="cnt-inspo">0</span></div>
-      <div class="series-item" onclick="filterSeries('project',this)"><span class="si-name">프로젝트</span><span class="si-count" id="cnt-project">0</span></div>
-      <div class="series-item" onclick="filterSeries('stackd',this)"><span class="si-name">STACKD</span><span class="si-count" id="cnt-stackd">0</span></div>
-    </aside>
-    <main class="main">
-      <div class="toolbar">
-        <h2>포스트 목록</h2>
-        <button class="btn" onclick="openModal()">+ 새 포스트</button>
-      </div>
-      <div class="posts-grid" id="posts-grid"></div>
-    </main>
-  </div>
-</div>
+        <div>
+          <div class="section-label">빠른 캡처</div>
+          <div style="background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:12px;margin-bottom:12px;">
+            <div class="ed-label">아이디어 메모</div>
+            <textarea id="quick-idea" class="ed-textarea" style="min-height:80px;margin-bottom:8px;" placeholder="떠오른 아이디어를 바로 적어봐..."></textarea>
+            <button class="btn prim" style="width:100%;" onclick="quickSave()">아이디어로 저장</button>
+          </div>
 
-<!-- ══════ AI 변환 스튜디오 ══════ -->
-<div id="tab-studio" class="page">
-  <div class="hero">
-    <div class="hero-eye">AI 콘텐츠 변환</div>
-    <div class="hero-title">한 번 쓰고 <em>모든 채널</em>로</div>
-    <div class="hero-sub">원본 글을 입력하면 스레드·인스타·블로그용으로 자동 변환됩니다</div>
+          <div class="section-label">시리즈 현황</div>
+          <div style="background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;" id="series-status"></div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="studio-layout">
-    <div class="studio-input">
-      <div class="studio-section">
-        <div class="sb-label" style="margin-bottom:12px;">원본 콘텐츠</div>
-        <div class="form-group">
-          <div class="frow">
-            <div><label class="fl">시리즈</label>
-              <select class="fs" id="in-series">
+
+  <!-- ── 포스트 목록 ── -->
+  <div id="view-posts" class="view">
+    <div class="view-head">
+      <div>
+        <div class="view-title">포스트 <em>관리</em></div>
+        <div class="view-meta" id="posts-meta">전체 0개</div>
+      </div>
+      <div class="head-actions">
+        <button class="btn" onclick="exportAll()">내보내기</button>
+        <button class="btn prim" onclick="openNew()">+ 새 포스트</button>
+      </div>
+    </div>
+    <div class="posts-wrap">
+      <div class="kanban-toolbar" id="filter-toolbar">
+        <span style="font-family:var(--fm);font-size:9px;color:var(--t2);letter-spacing:.08em;">상태:</span>
+        <button class="filter-btn act" onclick="filterStatus('all',this)">전체</button>
+        <button class="filter-btn" onclick="filterStatus('idea',this)">아이디어</button>
+        <button class="filter-btn" onclick="filterStatus('draft',this)">초안</button>
+        <button class="filter-btn" onclick="filterStatus('ready',this)">게시 준비</button>
+        <button class="filter-btn" onclick="filterStatus('done',this)">게시 완료</button>
+      </div>
+      <table class="post-table" id="post-table">
+        <thead>
+          <tr>
+            <th style="width:36px;">#</th>
+            <th>시리즈</th>
+            <th>제목</th>
+            <th>상태</th>
+            <th>날짜</th>
+            <th style="width:80px;"></th>
+          </tr>
+        </thead>
+        <tbody id="post-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── 에디터 ── -->
+  <div id="view-editor" class="view">
+    <div class="view-head">
+      <div>
+        <div class="view-title" id="editor-title-label">새 포스트</div>
+        <div class="view-meta" id="editor-meta">작성 중...</div>
+      </div>
+      <div class="head-actions">
+        <button class="btn" onclick="sendToStudio()">✦ AI 변환</button>
+        <button class="btn" onclick="saveAndClose()">저장 후 닫기</button>
+        <button class="btn prim" onclick="savePost()">저장</button>
+      </div>
+    </div>
+    <div class="editor-wrap">
+      <div class="editor-main">
+        <div class="editor-form">
+          <div class="ed-row">
+            <div>
+              <label class="ed-label">시리즈</label>
+              <select class="ed-select" id="ed-series" onchange="updatePreview()">
                 <option value="mental">바이브코딩 멘탈관리</option>
                 <option value="tip">바이브코딩 꿀기능</option>
                 <option value="vocab">바이브코딩 용어사전</option>
                 <option value="guide">바이브코딩 입문</option>
-                <option value="inspo">바이브코딩 영감</option>
+                <option value="inspo">영감 큐레이션</option>
                 <option value="project">프로젝트 소개</option>
                 <option value="stackd">STACKD 사용법</option>
               </select>
             </div>
-            <div><label class="fl">회차</label><input type="number" class="fi" id="in-num" value="1" min="1"></div>
+            <div>
+              <label class="ed-label">회차 번호</label>
+              <input type="number" class="ed-input" id="ed-num" value="1" min="1" onchange="updatePreview()">
+            </div>
           </div>
+          <div class="ed-full">
+            <label class="ed-label">제목 / 핵심 주제</label>
+            <input type="text" class="ed-input" id="ed-title" placeholder="제목 또는 핵심 키워드" oninput="updatePreview()">
+          </div>
+          <div class="ed-full">
+            <label class="ed-label">본문 (스레드 원고)</label>
+            <textarea class="ed-textarea large" id="ed-body" placeholder="스레드 글을 작성해봐.&#10;&#10;단락 구분은 빈 줄로.&#10;각 단락이 하나의 게시물이 돼." oninput="updatePreview()"></textarea>
+          </div>
+          <div class="ed-row">
+            <div>
+              <label class="ed-label">상태</label>
+              <select class="ed-select" id="ed-status">
+                <option value="idea">아이디어</option>
+                <option value="draft">초안</option>
+                <option value="ready">게시 준비</option>
+                <option value="done">게시 완료</option>
+              </select>
+            </div>
+            <div>
+              <label class="ed-label">게시 예정일</label>
+              <input type="date" class="ed-input" id="ed-date">
+            </div>
+          </div>
+          <div class="ed-full">
+            <label class="ed-label">메모 / 태그</label>
+            <input type="text" class="ed-input" id="ed-memo" placeholder="내부 메모 또는 키워드">
+          </div>
+          <input type="hidden" id="ed-id" value="">
         </div>
-        <div class="form-group"><label class="fl">제목 / 핵심 주제</label><input type="text" class="fi" id="in-title" placeholder="예: 조급해하지 말고 즐겨"></div>
-        <div class="form-group"><label class="fl">원본 글</label><textarea class="ft" id="in-body" placeholder="원고를 입력해봐. 키워드, 요점, 완성 글 모두 OK.&#10;AI가 각 플랫폼에 맞게 자동 변환해줄게."></textarea></div>
-        <div class="form-group"><label class="fl">톤 / 스타일</label>
-          <select class="fs" id="in-tone">
-            <option value="casual">캐주얼 (친근하게)</option>
-            <option value="insight">인사이트 (깊이 있게)</option>
-            <option value="howto">하우투 (단계별로)</option>
-            <option value="story">스토리 (감성적으로)</option>
+      </div>
+
+      <div class="editor-sidebar">
+        <div class="es-section">
+          <div class="es-label">스레드 미리보기</div>
+          <div class="tprev" id="thread-preview"></div>
+        </div>
+        <div class="es-section">
+          <div class="es-label">톤 선택</div>
+          <select class="ed-select" id="ed-tone" style="margin-bottom:10px;">
+            <option value="casual">캐주얼 · 친근하게</option>
+            <option value="insight">인사이트 · 깊이 있게</option>
+            <option value="howto">하우투 · 단계별로</option>
+            <option value="story">스토리 · 감성적으로</option>
           </select>
+          <button class="btn prim" style="width:100%;" onclick="sendToStudio()">✦ AI로 변환 생성</button>
         </div>
       </div>
-      <div class="studio-section">
-        <div class="sb-label" style="margin-bottom:12px;">변환할 플랫폼</div>
-        <div class="platform-grid">
-          <label class="ptog on" id="ptog-thread"><input type="checkbox" checked style="display:none" id="pchk-thread"><span class="pt-dot d-t"></span><span class="pt-name">스레드</span></label>
-          <label class="ptog on" id="ptog-insta"><input type="checkbox" checked style="display:none" id="pchk-insta"><span class="pt-dot d-i"></span><span class="pt-name">인스타그램</span></label>
-          <label class="ptog on" id="ptog-blog"><input type="checkbox" checked style="display:none" id="pchk-blog"><span class="pt-dot d-b"></span><span class="pt-name">블로그</span></label>
-          <label class="ptog" id="ptog-x"><input type="checkbox" style="display:none" id="pchk-x"><span class="pt-dot d-x"></span><span class="pt-name">X (트위터)</span></label>
-        </div>
+    </div>
+  </div>
+
+  <!-- ── AI 스튜디오 ── -->
+  <div id="view-studio" class="view">
+    <div class="view-head">
+      <div>
+        <div class="view-title">AI <em>변환 스튜디오</em></div>
+        <div class="view-meta">원고 한 번 → 스레드 · 인스타 · 블로그 동시 변환</div>
       </div>
-      <div style="padding:16px;">
+      <div class="head-actions">
+        <button class="btn" onclick="saveToArchive()">변환 결과 저장</button>
+      </div>
+    </div>
+    <div class="studio-wrap">
+      <div class="studio-left">
+        <div class="es-label" style="margin-bottom:8px;">원본 선택</div>
+        <div id="studio-source-list" style="margin-bottom:12px;"></div>
+
+        <div class="es-label" style="margin-bottom:8px;">또는 직접 입력</div>
+        <textarea class="ed-textarea" id="st-body" style="min-height:100px;margin-bottom:12px;" placeholder="원고를 직접 입력해봐."></textarea>
+
+        <div class="es-label" style="margin-bottom:8px;">변환할 플랫폼</div>
+        <div class="ptog-grid" style="margin-bottom:12px;">
+          <label class="ptog on" id="ptog-t"><input type="checkbox" checked style="display:none" id="pchk-t"><span class="pt-d d-t"></span><span class="pt-n">스레드</span></label>
+          <label class="ptog on" id="ptog-i"><input type="checkbox" checked style="display:none" id="pchk-i"><span class="pt-d d-i"></span><span class="pt-n">인스타</span></label>
+          <label class="ptog on" id="ptog-b"><input type="checkbox" checked style="display:none" id="pchk-b"><span class="pt-d d-b"></span><span class="pt-n">블로그</span></label>
+          <label class="ptog" id="ptog-x"><input type="checkbox" style="display:none" id="pchk-x"><span class="pt-d d-x"></span><span class="pt-n">X</span></label>
+        </div>
+
+        <div class="es-label" style="margin-bottom:6px;">톤</div>
+        <select class="ed-select" id="st-tone" style="margin-bottom:12px;">
+          <option value="casual">캐주얼 · 친근하게</option>
+          <option value="insight">인사이트 · 깊이 있게</option>
+          <option value="howto">하우투 · 단계별로</option>
+          <option value="story">스토리 · 감성적으로</option>
+        </select>
+
         <button class="btn-gen" id="btn-gen" onclick="generateContent()">
-          <span class="spinner" id="gen-spinner"></span>
-          <span id="btn-gen-text">✦ AI로 변환 생성</span>
+          <span class="spin" id="gen-spin"></span>
+          <span id="gen-txt">✦ AI로 변환 생성</span>
         </button>
       </div>
-    </div>
-    <div class="studio-output">
-      <div id="empty-state" class="empty-state">
-        <div class="empty-icon">✦</div>
-        <div class="empty-title">변환 대기 중</div>
-        <div class="empty-desc">왼쪽에 원고를 입력하고<br>플랫폼 선택 후 변환 버튼을 눌러봐.</div>
-      </div>
-      <div id="output-container" style="display:none;">
-        <div class="output-header">
-          <div class="output-ttl" id="output-ttl">변환 결과</div>
-          <button class="btn" onclick="saveToArchive()">저장</button>
+
+      <div class="studio-right">
+        <div id="studio-empty" class="empty">
+          <div class="empty-icon">✦</div>
+          <div class="empty-title">변환 대기 중</div>
+          <div class="empty-desc">왼쪽에서 원고를 선택하거나<br>직접 입력한 후 생성 버튼을 눌러봐.</div>
         </div>
-        <div class="ptabs" id="ptabs"></div>
-        <div class="output-pane" id="pane-thread"><div class="out-card"><div class="out-card-head"><span class="out-platform">Threads · @vibestackd</span><div class="out-actions"><button class="btn-copy" onclick="copyPlatform('thread')">복사</button></div></div><div class="out-body tp" id="thread-out"></div></div></div>
-        <div class="output-pane" id="pane-insta"><div class="out-card"><div class="out-card-head"><span class="out-platform">Instagram · @vibestackd</span><div class="out-actions"><button class="btn-copy" onclick="copyPlatform('insta')">캡션 복사</button></div></div><div class="out-body"><div class="ip"><div class="ip-head"><div class="ip-av">VS</div><div class="ip-handle">@vibestackd</div></div><div class="ip-img"><div class="ip-img-txt" id="insta-cover"></div><div class="ip-img-sub">@vibestackd</div></div><div class="ip-cap" id="insta-cap"></div><div class="ip-tags" id="insta-tags"></div></div></div></div></div>
-        <div class="output-pane" id="pane-blog"><div class="out-card"><div class="out-card-head"><span class="out-platform">블로그 (티스토리 / 브런치 / 네이버)</span><div class="out-actions"><button class="btn-copy" onclick="copyPlatform('blog')">복사</button></div></div><div class="out-body bp" id="blog-out"></div></div></div>
-        <div class="output-pane" id="pane-x"><div class="out-card"><div class="out-card-head"><span class="out-platform">X (트위터) · @vibestackd</span><div class="out-actions"><button class="btn-copy" onclick="copyPlatform('x')">복사</button></div></div><div class="out-body tp" id="x-out"></div></div></div>
+        <div id="studio-output" style="display:none;">
+          <div class="out-tabs" id="out-tabs"></div>
+          <div id="out-thread" class="out-pane"></div>
+          <div id="out-insta" class="out-pane"></div>
+          <div id="out-blog" class="out-pane"></div>
+          <div id="out-x" class="out-pane"></div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- ══════ 아카이브 ══════ -->
-<div id="tab-archive" class="page">
-  <div class="hero">
-    <div class="hero-eye">콘텐츠 아카이브</div>
-    <div class="hero-title">저장된 <em>변환 결과</em></div>
-    <div class="hero-sub">생성하고 저장한 콘텐츠 모음</div>
-  </div>
-  <div style="padding:28px 36px;">
-    <div id="archive-grid" class="archive-grid"></div>
-    <div id="archive-empty" style="text-align:center;padding:60px 0;display:none;">
-      <div style="font-family:var(--fd);font-size:20px;color:var(--ink3);">아직 저장된 콘텐츠가 없어</div>
-      <div style="font-size:12px;color:var(--ink3);margin-top:6px;">AI 변환 후 저장 버튼을 눌러봐.</div>
+  <!-- ── 설정 ── -->
+  <div id="view-settings" class="view">
+    <div class="view-head">
+      <div><div class="view-title">설정</div><div class="view-meta">API 키 · 계정 · 기본값</div></div>
     </div>
-  </div>
-</div>
-
-<!-- ══════ 캘린더 ══════ -->
-<div id="tab-calendar" class="page">
-  <div class="hero">
-    <div class="hero-eye">포스팅 캘린더</div>
-    <div class="hero-title">2026년 <em>4월</em></div>
-    <div class="hero-sub">주 3~4회 · 월·수·금 오후 7시 권장</div>
-  </div>
-  <div style="padding:28px 36px;">
-    <div class="cal-wrap">
-      <div class="cal-hd">MON</div><div class="cal-hd">TUE</div><div class="cal-hd">WED</div>
-      <div class="cal-hd">THU</div><div class="cal-hd">FRI</div><div class="cal-hd">SAT</div><div class="cal-hd">SUN</div>
-    </div>
-    <div id="cal-body" class="cal-wrap" style="grid-template-columns:repeat(7,1fr);"></div>
-    <div class="divider" style="margin-top:24px;"><span class="divider-text">범례</span></div>
-    <div style="display:flex;gap:14px;flex-wrap:wrap;">
-      <span class="cal-ev ev-mental">멘탈관리</span>
-      <span class="cal-ev ev-tip">꿀기능</span>
-      <span class="cal-ev ev-vocab">용어사전</span>
-      <span class="cal-ev ev-project">프로젝트</span>
-    </div>
-  </div>
-</div>
-
-<!-- ══════ 딥다이브 ══════ -->
-<div id="tab-deepdive" class="page">
-  <div class="dd-hero">
-    <div>
-      <div class="dd-kicker">프로젝트 딥다이브 · #01</div>
-      <div class="dd-name">STACKD</div>
-      <div class="dd-tagline">바이브코딩 생태계를 한 대시보드에 연결하는 무료 개인 생산성 플랫폼</div>
-      <div class="dd-tags">
-        <span class="dd-tag">오픈소스 MIT</span>
-        <span class="dd-tag">GitHub Pages</span>
-        <span class="dd-tag">운영비 $0</span>
-        <span class="dd-tag hl">vibestackd.com</span>
-      </div>
-    </div>
-    <div class="meta-box">
-      <div class="meta-item"><div class="meta-k">제작자</div><div class="meta-v">@vibestackd</div></div>
-      <div class="meta-item"><div class="meta-k">기술 스택</div><div class="meta-v">HTML / CSS / JS</div></div>
-      <div class="meta-item"><div class="meta-k">데이터</div><div class="meta-v">localStorage</div></div>
-      <div class="meta-item"><div class="meta-k">상태</div><div class="meta-v" style="color:#6adb8a;">배포 완료</div></div>
-    </div>
-  </div>
-  <div style="padding:28px 36px;">
-    <div class="divider"><span class="divider-text">핵심 기능</span></div>
-    <div class="feat-grid">
-      <div class="feat"><div class="feat-num">01</div><div class="feat-title">위젯 갤러리</div><div class="feat-desc">커뮤니티가 만든 미니 앱을 골라서 내 화면에 추가.</div><div class="feat-prompt">"vibestackd.com/widgets 에서 위젯 추가하기"</div></div>
-      <div class="feat"><div class="feat-num">02</div><div class="feat-title">레고 조립 대시보드</div><div class="feat-desc">드래그·리사이즈로 원하는 대로 배치. 탭 전환 없이 한 화면에.</div><div class="feat-prompt">"URL 하나면 어떤 웹앱이든 임베드 가능"</div></div>
-      <div class="feat"><div class="feat-num">03</div><div class="feat-title">ZIP 백업 / 복원</div><div class="feat-desc">내 대시보드 전체를 ZIP으로 내보내고 언제든 복원.</div><div class="feat-prompt">"설정 → 내보내기 → ZIP 다운로드"</div></div>
-      <div class="feat"><div class="feat-num">04</div><div class="feat-title">완전 무료 · 제로 서버</div><div class="feat-desc">모든 데이터가 내 브라우저에만 저장. 구독료 없음.</div><div class="feat-prompt">"GitHub Pages 정적 호스팅, 운영비 $0"</div></div>
-    </div>
-    <div class="divider" style="margin-top:28px;"><span class="divider-text">스레드 글 아이디어</span></div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);">
-      <div style="background:var(--white);padding:18px;"><div style="font-family:var(--fm);font-size:8px;color:var(--ink3);margin-bottom:6px;letter-spacing:.12em;text-transform:uppercase;">CATEGORY</div><div style="font-size:12px;font-weight:700;margin-bottom:5px;">STACKD 사용법 #1</div><div style="font-size:10px;color:var(--ink2);line-height:1.6;">GitHub Pages 링크로 내 앱 STACKD에 추가하는 법. 30초면 됨.</div><button class="btn-accent" style="margin-top:10px;font-size:8px;padding:6px 12px;" onclick="loadDeepDiveToStudio('STACKD 사용법 #1: GitHub Pages 링크로 내 앱을 STACKD에 추가하는 법을 설명해줘.')">✦ 변환</button></div>
-      <div style="background:var(--white);padding:18px;"><div style="font-family:var(--fm);font-size:8px;color:var(--ink3);margin-bottom:6px;letter-spacing:.12em;text-transform:uppercase;">CATEGORY</div><div style="font-size:12px;font-weight:700;margin-bottom:5px;">STACKD 사용법 #2</div><div style="font-size:10px;color:var(--ink2);line-height:1.6;">위젯 갤러리에서 다른 사람이 만든 앱을 내 화면에 추가하는 법.</div><button class="btn-accent" style="margin-top:10px;font-size:8px;padding:6px 12px;" onclick="loadDeepDiveToStudio('STACKD 사용법 #2: 위젯 갤러리에서 다른 사람이 만든 앱을 내 대시보드에 추가하는 방법을 설명해줘.')">✦ 변환</button></div>
-      <div style="background:var(--white);padding:18px;"><div style="font-family:var(--fm);font-size:8px;color:var(--ink3);margin-bottom:6px;letter-spacing:.12em;text-transform:uppercase;">COVER STORY</div><div style="font-size:12px;font-weight:700;margin-bottom:5px;">파편화된 앱들의 문제</div><div style="font-size:10px;color:var(--ink2);line-height:1.6;">만들었는데 결국 나만 쓰다 GitHub 구석에 방치되는 이유.</div><button class="btn-accent" style="margin-top:10px;font-size:8px;padding:6px 12px;" onclick="loadDeepDiveToStudio('바이브코딩으로 만든 앱이 GitHub 구석에 방치되는 이유와, STACKD가 이 파편화 문제를 해결하는 방법을 설명해줘.')">✦ 변환</button></div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════ 설정 ══════ -->
-<div id="tab-settings" class="page">
-  <div class="hero">
-    <div class="hero-eye">설정</div>
-    <div class="hero-title"><em>시스템</em> 설정</div>
-    <div class="hero-sub">API 키 및 계정 정보 설정</div>
-  </div>
-  <div style="padding:0 36px 36px;">
-    <div class="set-section">
-      <div class="set-title">Claude API 키</div>
-      <div style="font-size:11px;color:var(--ink2);line-height:1.7;margin-bottom:12px;">
-        AI 변환 기능을 쓰려면 Anthropic API 키가 필요해.<br>
-        <a href="https://console.anthropic.com" target="_blank" style="color:var(--ink);font-weight:700;">console.anthropic.com</a>에서 발급받을 수 있어.
-      </div>
-      <div class="api-box">
+    <div class="settings-wrap">
+      <div class="set-card">
+        <div class="set-card-title">Claude API 키</div>
+        <div style="font-size:11px;color:var(--t2);line-height:1.7;margin-bottom:10px;">
+          AI 변환 기능 사용을 위해 필요해. <a href="https://console.anthropic.com" target="_blank" style="color:var(--acc2);">console.anthropic.com</a>에서 발급.
+        </div>
         <div class="api-row">
-          <input type="password" class="api-in" id="api-key-in" placeholder="sk-ant-api03-...">
-          <button class="btn" onclick="saveApiKey()">저장</button>
+          <input type="password" class="api-in" id="api-in" placeholder="sk-ant-api03-...">
+          <button class="btn prim" onclick="saveApiKey()">저장</button>
         </div>
-        <div id="api-st" class="api-st no" style="display:none;"></div>
+        <div id="api-note" class="api-note no" style="display:none;"></div>
+      </div>
+      <div class="set-card">
+        <div class="set-card-title">계정 정보</div>
+        <div style="margin-bottom:12px;">
+          <label class="ed-label">계정 핸들</label>
+          <input type="text" class="ed-input" id="set-handle" value="@vibestackd">
+        </div>
+        <div style="margin-bottom:12px;">
+          <label class="ed-label">서비스 URL</label>
+          <input type="text" class="ed-input" id="set-url" value="vibestackd.com">
+        </div>
+        <div style="margin-bottom:12px;">
+          <label class="ed-label">고정 해시태그</label>
+          <input type="text" class="ed-input" id="set-tags" value="#바이브코딩, #사이드프로젝트, #AI코딩, #Claude">
+        </div>
+        <button class="btn prim" onclick="saveSettings()">저장</button>
+      </div>
+      <div class="set-card">
+        <div class="set-card-title">데이터 관리</div>
+        <div class="set-row">
+          <div class="set-info"><div class="sl">데이터 내보내기</div><div class="sd">전체 포스트를 JSON으로 내보내기</div></div>
+          <button class="btn" onclick="exportAll()">내보내기</button>
+        </div>
+        <div class="set-row">
+          <div class="set-info"><div class="sl">데이터 가져오기</div><div class="sd">JSON 파일로 포스트 복원</div></div>
+          <label class="btn" style="cursor:pointer;">가져오기<input type="file" accept=".json" style="display:none;" onchange="importAll(this)"></label>
+        </div>
+        <div class="set-row">
+          <div class="set-info"><div class="sl">전체 초기화</div><div class="sd">모든 데이터 삭제 (복구 불가)</div></div>
+          <button class="btn danger" onclick="resetAll()">초기화</button>
+        </div>
       </div>
     </div>
-    <div class="set-section">
-      <div class="set-title">계정 정보</div>
-      <div class="form-group"><label class="fl">스레드 / 인스타 계정</label><input type="text" class="fi" id="set-handle" value="@vibestackd"></div>
-      <div class="form-group"><label class="fl">서비스 URL</label><input type="text" class="fi" id="set-url" value="vibestackd.com"></div>
-      <div class="form-group"><label class="fl">고정 해시태그 (쉼표로 구분)</label><input type="text" class="fi" id="set-tags" value="#바이브코딩, #사이드프로젝트, #AI코딩, #Claude"></div>
-      <button class="btn" onclick="saveSettings()">설정 저장</button>
-    </div>
-    <div class="set-section">
-      <div class="set-title">플랫폼 기본값</div>
-      <div class="set-row"><div><div class="set-lbl">스레드 기본 활성화</div><div class="set-desc">새 글 작성 시 스레드 기본 선택</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
-      <div class="set-row"><div><div class="set-lbl">인스타그램 기본 활성화</div><div class="set-desc">새 글 작성 시 인스타그램 기본 선택</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
-      <div class="set-row"><div><div class="set-lbl">블로그 기본 활성화</div><div class="set-desc">새 글 작성 시 블로그 기본 선택</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
-    </div>
   </div>
+
+</main>
 </div>
 
-<!-- ══════ 새 글 MODAL ══════ -->
-<div class="modal-overlay" id="modal">
+<!-- 빠른 캡처바 (K 키) -->
+<div class="quick-bar" id="quick-bar">
+  <input type="text" class="qb-input" id="qb-input" placeholder="아이디어 빠르게 캡처... (Enter로 저장)">
+  <span class="qb-hint">Esc 닫기</span>
+</div>
+
+<!-- 포스트 모달 -->
+<div class="modal-ov" id="modal">
   <div class="modal">
     <div class="modal-head">
-      <h3>새 포스트 작성</h3>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <h3 id="modal-title">새 포스트</h3>
+      <button class="btn-icon" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body">
-      <div class="frow">
-        <div class="form-group"><label class="fl">시리즈</label>
-          <select class="fs" id="m-series" onchange="updateModalPreview()">
+      <div class="ed-row">
+        <div><label class="ed-label">시리즈</label>
+          <select class="ed-select" id="m-series" onchange="updateModalPreview()">
             <option value="mental">바이브코딩 멘탈관리</option>
             <option value="tip">바이브코딩 꿀기능</option>
             <option value="vocab">바이브코딩 용어사전</option>
             <option value="guide">바이브코딩 입문</option>
-            <option value="inspo">바이브코딩 영감</option>
+            <option value="inspo">영감 큐레이션</option>
             <option value="project">프로젝트 소개</option>
             <option value="stackd">STACKD 사용법</option>
           </select>
         </div>
-        <div class="form-group"><label class="fl">회차</label><input type="number" class="fi" id="m-num" value="1" min="1" onchange="updateModalPreview()"></div>
+        <div><label class="ed-label">회차</label><input type="number" class="ed-input" id="m-num" value="1" min="1" onchange="updateModalPreview()"></div>
       </div>
-      <div class="form-group"><label class="fl">제목 / 한 줄 훅</label><input type="text" class="fi" id="m-title" placeholder="예: 조급해하지 말고 즐겨" oninput="updateModalPreview()"></div>
-      <div class="form-group"><label class="fl">본문</label><textarea class="ft" id="m-body" style="min-height:120px;" placeholder="스레드 글을 작성해봐." oninput="updateModalPreview()"></textarea></div>
-      <div class="frow">
-        <div class="form-group"><label class="fl">상태</label>
-          <select class="fs" id="m-status">
+      <div style="margin-bottom:12px;"><label class="ed-label">제목</label><input type="text" class="ed-input" id="m-title" placeholder="제목 또는 핵심 주제" oninput="updateModalPreview()"></div>
+      <div style="margin-bottom:12px;"><label class="ed-label">본문</label><textarea class="ed-textarea" id="m-body" style="min-height:120px;" placeholder="내용을 입력해봐." oninput="updateModalPreview()"></textarea></div>
+      <div class="ed-row">
+        <div><label class="ed-label">상태</label>
+          <select class="ed-select" id="m-status">
+            <option value="idea">아이디어</option>
             <option value="draft">초안</option>
             <option value="ready">게시 준비</option>
-            <option value="published">게시 완료</option>
+            <option value="done">게시 완료</option>
           </select>
         </div>
-        <div class="form-group"><label class="fl">날짜</label><input type="date" class="fi" id="m-date"></div>
+        <div><label class="ed-label">날짜</label><input type="date" class="ed-input" id="m-date"></div>
       </div>
-
-      <!-- 미리보기 -->
-      <div style="background:var(--white);border:1px solid var(--rule);padding:16px;">
-        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--rule);">스레드 미리보기</div>
-        <div class="mp">
-          <div class="mp-post">
-            <div class="av">ST</div>
-            <div class="mp-body">
-              <div class="mp-handle">@vibestackd</div>
-              <div class="mp-text" id="modal-preview">[시리즈 #1]\n\n내용이 여기 표시됩니다.</div>
-            </div>
-          </div>
+      <div>
+        <div class="ed-label" style="margin-top:12px;margin-bottom:8px;">미리보기</div>
+        <div style="background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:12px;">
+          <div class="tprev" id="modal-preview"></div>
         </div>
       </div>
-
-      <div style="display:flex;gap:10px;justify-content:space-between;">
-        <button class="btn-accent" onclick="sendToStudio()">✦ AI로 변환</button>
-        <div style="display:flex;gap:8px;">
-          <button class="btn-outline" onclick="closeModal()">취소</button>
-          <button class="btn" onclick="savePost()">저장</button>
-        </div>
+      <input type="hidden" id="m-id">
+    </div>
+    <div class="modal-footer">
+      <button class="btn" style="border-color:var(--acc2);color:var(--acc2);" onclick="modalToEditor()">에디터에서 열기</button>
+      <div style="display:flex;gap:8px;">
+        <button class="btn" onclick="closeModal()">취소</button>
+        <button class="btn prim" onclick="saveModal()">저장</button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-// ── DATA ──
+// ══════════════════════════════════
+// DATA
+// ══════════════════════════════════
 const SERIES = {
   mental:'바이브코딩 멘탈관리', tip:'바이브코딩 꿀기능',
   vocab:'바이브코딩 용어사전', guide:'바이브코딩 입문',
-  inspo:'바이브코딩 영감', project:'프로젝트 소개', stackd:'STACKD 사용법'
+  inspo:'영감 큐레이션', project:'프로젝트 소개', stackd:'STACKD 사용법'
 };
-let posts = JSON.parse(localStorage.getItem('stackd_posts2') || '[]');
-let archive = JSON.parse(localStorage.getItem('stackd_archive2') || '[]');
+const SERIES_COLOR = {
+  mental:'var(--acc4)', tip:'var(--acc2)', vocab:'var(--acc)',
+  guide:'var(--acc3)', inspo:'#b47fff', project:'#ff9f47', stackd:'var(--acc)'
+};
+const STATUS_CLASS = {idea:'s-idea',draft:'s-draft',ready:'s-ready',done:'s-done'};
+const STATUS_LABEL = {idea:'아이디어',draft:'초안',ready:'게시 준비',done:'게시 완료'};
+
+// ── FILE SYSTEM STATE ──
+let posts = [];
+let archive = [];
 let currentResult = null;
+let editingId = null;
+let currentFilter = {series:'all', status:'all'};
+let fileHandle = null;   // File System Access API handle
+let isDirty = false;     // 미저장 변경사항
+let autoSaveTimer = null;
 
-if (!posts.length) {
-  posts = [
-    {id:1,series:'mental',num:1,title:'조급해하지 말고 즐겨',body:'바이브코딩 하다 보면\n"나도 수익화해야 하나..." FOMO 느끼지 않아?',status:'ready',date:'2026-04-28'},
-    {id:2,series:'tip',num:1,title:'자동저장 · 다크모드 · JSON백업',body:'Claude 한 마디로 해결되는 꿀기능 모음',status:'draft',date:'2026-04-30'},
-    {id:3,series:'guide',num:1,title:'AI 채팅 한 번으로 내 앱 만드는 법',body:'코딩 몰라도 됨. 준비물은 딱 3개.',status:'draft',date:'2026-05-02'},
-    {id:4,series:'vocab',num:1,title:'이 단어만 알면 Claude랑 대화가 달라진다',body:'헤더, 패딩, 반응형...',status:'draft',date:'2026-05-05'},
-  ];
-  savePosts();
+const SAMPLE_POSTS = [
+  {id:1,series:'mental',num:1,title:'조급해하지 말고 즐겨',body:'바이브코딩 하다 보면\n"나도 수익화해야 하나..." FOMO 느끼지 않아?\n\n---\n\n커뮤니티 보면 다들 런칭하고\n그 사이에서 조급함이 밀려오는 거,\n나만 그런 거 아님.',status:'ready',date:'2026-04-28',memo:'텍스트 카드 있음'},
+  {id:2,series:'mental',num:2,title:'바이브코딩 수익화를 다시 정의해봐',body:'바이브코딩 수익화 = 서비스 성공?\n이 등호가 틀렸어.\n\n---\n\n본업이 빨라지는 것.\n취미가 깊어지는 것.\n생산성이 올라가는 것.\n전부 수익화야.',status:'draft',date:'2026-05-05',memo:''},
+  {id:3,series:'tip',num:1,title:'자동저장 · 다크모드 · JSON백업',body:'새로고침하면 다 날아가죠?\nClaude 한 마디로 해결 가능함.',status:'ready',date:'2026-04-30',memo:'C시리즈 카드뉴스 연결'},
+  {id:4,series:'guide',num:1,title:'AI 채팅 한 번으로 내 앱 만드는 법',body:'코딩 몰라도 됨.\n준비물은 딱 3개.\nClaude / GitHub / STACKD',status:'done',date:'2026-04-22',memo:'A시리즈 완성'},
+];
+
+// ── SAVE STATUS UI ──
+function setSaveDot(state) {
+  const dot = document.getElementById('save-dot');
+  dot.className = 'save-dot ' + state;
+}
+function markDirty() {
+  isDirty = true;
+  setSaveDot('dirty');
+  // 30초 후 자동 저장
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(() => { if(isDirty) saveFile(); }, 30000);
 }
 
-function savePosts(){ localStorage.setItem('stackd_posts2', JSON.stringify(posts)); }
-
-// ── 탭 ──
-function showTab(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  const map = {magazine:0,posts:1,studio:2,archive:3,calendar:4,deepdive:5,settings:6};
-  document.querySelectorAll('.tab-btn')[map[name]]?.classList.add('active');
-  if (name === 'posts') renderPosts('all');
-  if (name === 'calendar') renderCalendar();
-  if (name === 'archive') renderArchive();
+// ── DATA ACCESS ──
+function getDataObj() {
+  return {
+    version: 1,
+    savedAt: new Date().toISOString(),
+    settings: {
+      handle: localStorage.getItem('sos_handle') || '@vibestackd',
+      url: localStorage.getItem('sos_url') || 'vibestackd.com',
+      tags: localStorage.getItem('sos_tags') || '#바이브코딩, #사이드프로젝트, #AI코딩',
+      key: localStorage.getItem('sos_key') || ''
+    },
+    posts,
+    archive
+  };
 }
 
-// ── 포스트 렌더 ──
-function renderPosts(filter) {
-  const grid = document.getElementById('posts-grid');
-  const filtered = filter === 'all' ? posts : posts.filter(p => p.series === filter);
-  // 카운트 업데이트
+function loadFromObj(data) {
+  if (data.posts) posts = data.posts;
+  if (data.archive) archive = data.archive;
+  if (data.settings) {
+    if (data.settings.handle) localStorage.setItem('sos_handle', data.settings.handle);
+    if (data.settings.url) localStorage.setItem('sos_url', data.settings.url);
+    if (data.settings.tags) localStorage.setItem('sos_tags', data.settings.tags);
+    if (data.settings.key) localStorage.setItem('sos_key', data.settings.key);
+  }
+}
+
+// ── FILE SYSTEM ACCESS ──
+async function openFile() {
+  try {
+    // File System Access API 지원 여부 확인
+    if (window.showOpenFilePicker) {
+      const [handle] = await window.showOpenFilePicker({
+        types: [{ description: 'JSON', accept: {'application/json': ['.json']} }],
+        multiple: false
+      });
+      fileHandle = handle;
+      const file = await handle.getFile();
+      const text = await file.text();
+      const data = JSON.parse(text);
+      loadFromObj(data);
+      closeWelcome();
+      updateFileLabel(file.name);
+      setSaveDot('saved');
+      isDirty = false;
+    } else {
+      // Fallback: input[type=file]
+      fallbackOpen();
+    }
+  } catch(e) {
+    if (e.name !== 'AbortError') {
+      fallbackOpen();
+    }
+  }
+  updateCounts(); renderDash(); initSettings();
+}
+
+function fallbackOpen() {
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = '.json';
+  input.onchange = async () => {
+    const file = input.files[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const data = JSON.parse(text);
+      loadFromObj(data);
+      closeWelcome();
+      updateFileLabel(file.name + ' (읽기 전용)');
+      setSaveDot('saved');
+      isDirty = false;
+      updateCounts(); renderDash(); initSettings();
+      // 읽기 전용이면 저장 시 다운로드로
+      fileHandle = null;
+      alert('파일을 읽었어.\n저장 시 새 파일로 다운로드돼. (브라우저 제한)');
+    } catch(e) { alert('파일을 읽을 수 없어: ' + e.message); }
+  };
+  input.click();
+}
+
+async function saveFile() {
+  const json = JSON.stringify(getDataObj(), null, 2);
+  if (fileHandle) {
+    try {
+      setSaveDot('saving');
+      const writable = await fileHandle.createWritable();
+      await writable.write(json);
+      await writable.close();
+      isDirty = false;
+      setSaveDot('saved');
+      setTimeout(() => setSaveDot(''), 2000);
+      return;
+    } catch(e) {
+      console.warn('파일 쓰기 실패, 다운로드로 대체:', e);
+    }
+  }
+  // Fallback: 다운로드
+  downloadJson(json);
+}
+
+async function saveFileAs() {
+  const json = JSON.stringify(getDataObj(), null, 2);
+  if (window.showSaveFilePicker) {
+    try {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: 'stackd-os.json',
+        types: [{ description: 'JSON', accept: {'application/json': ['.json']} }]
+      });
+      fileHandle = handle;
+      const writable = await handle.createWritable();
+      await writable.write(json);
+      await writable.close();
+      isDirty = false;
+      setSaveDot('saved');
+      updateFileLabel(handle.name);
+      setTimeout(() => setSaveDot(''), 2000);
+      return;
+    } catch(e) {
+      if (e.name !== 'AbortError') downloadJson(json);
+    }
+  } else {
+    downloadJson(json);
+  }
+}
+
+function downloadJson(json) {
+  const blob = new Blob([json], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'stackd-os-' + new Date().toISOString().split('T')[0] + '.json';
+  a.click();
+  isDirty = false;
+  setSaveDot('saved');
+  setTimeout(() => setSaveDot(''), 2000);
+}
+
+async function createNewFile() {
+  posts = [...SAMPLE_POSTS];
+  archive = [];
+  if (window.showSaveFilePicker) {
+    try {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: 'stackd-os.json',
+        types: [{ description: 'JSON', accept: {'application/json': ['.json']} }]
+      });
+      fileHandle = handle;
+      updateFileLabel(handle.name);
+      await saveFile();
+    } catch(e) {
+      if (e.name !== 'AbortError') { fileHandle = null; updateFileLabel('미저장 (새 파일)'); }
+    }
+  } else {
+    fileHandle = null;
+    updateFileLabel('미저장 (새 파일)');
+  }
+  closeWelcome();
+  updateCounts(); renderDash(); initSettings();
+  isDirty = true; setSaveDot('dirty');
+}
+
+function closeWelcome() {
+  document.getElementById('welcome-ov').style.display = 'none';
+}
+
+function updateFileLabel(name) {
+  const el = document.getElementById('file-name-label');
+  el.textContent = name;
+  el.className = 'file-name linked';
+}
+
+// ── SAVE POSTS (marks dirty) ──
+function savePosts() { markDirty(); }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function getApiKey() { return localStorage.getItem('sos_key') || ''; }
+
+// ══════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════
+function nav(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('act'));
+  document.querySelectorAll('.tb-btn').forEach(b => b.classList.remove('act'));
+  document.getElementById('view-' + name).classList.add('act');
+  const map = {dash:0,posts:1,editor:2,studio:3,settings:4};
+  document.querySelectorAll('.tb-btn')[map[name]]?.classList.add('act');
+  if (name === 'dash') renderDash();
+  if (name === 'posts') renderPosts();
+  if (name === 'studio') renderStudioSources();
+}
+
+// ══════════════════════════════════
+// COUNTS & SIDEBAR
+// ══════════════════════════════════
+function updateCounts() {
   const keys = Object.keys(SERIES);
   document.getElementById('cnt-all').textContent = posts.length;
   keys.forEach(k => {
     const el = document.getElementById('cnt-' + k);
     if (el) el.textContent = posts.filter(p => p.series === k).length;
   });
-  const statClass = {draft:'s-draft', ready:'s-ready', published:'s-pub'};
-  const statLabel = {draft:'초안', ready:'게시 준비', published:'게시 완료'};
-  grid.innerHTML = filtered.length ? filtered.map(p => `
-    <div class="post-card">
-      <div class="pc-tag"><span class="num">#${p.num}</span>${SERIES[p.series]||p.series}</div>
-      <div class="pc-title">${esc(p.title)}</div>
-      <div class="pc-preview">${esc(p.body)}</div>
-      <div class="pc-footer">
-        <span class="status ${statClass[p.status]||'s-draft'}">${statLabel[p.status]||p.status}</span>
-        <span class="pc-date">${p.date||'날짜 미정'}</span>
-      </div>
-    </div>`).join('') : '<div style="color:var(--ink3);font-size:13px;padding:40px 0;">포스트가 없어. 새 포스트를 작성해봐.</div>';
+  ['idea','draft','ready','done'].forEach(s => {
+    const el = document.getElementById('cnt-' + s);
+    if (el) el.textContent = posts.filter(p => p.status === s).length;
+  });
+  document.getElementById('s-total').textContent = posts.length;
+  document.getElementById('s-draft').textContent = posts.filter(p=>p.status==='draft').length;
+  document.getElementById('s-ready').textContent = posts.filter(p=>p.status==='ready').length;
+  document.getElementById('s-done').textContent = posts.filter(p=>p.status==='done').length;
 }
 
-function filterSeries(type, el) {
-  document.querySelectorAll('.series-item').forEach(i => i.classList.remove('active'));
-  el.classList.add('active');
-  if (document.getElementById('tab-posts').classList.contains('active')) renderPosts(type);
-}
-
-// ── 캘린더 ──
-function renderCalendar() {
-  const body = document.getElementById('cal-body');
-  const year = 2026, month = 3;
-  const firstDay = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const offset = (firstDay + 6) % 7;
-  const scheduled = {28:[{cls:'ev-mental',lbl:'멘탈관리 #1'}],30:[{cls:'ev-tip',lbl:'꿀기능 #1'}]};
-  let html = '';
-  for (let i = 0; i < offset; i++) html += '<div class="cal-day empty"></div>';
+// ══════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════
+function renderDash() {
+  updateCounts();
   const today = new Date();
-  for (let d = 1; d <= daysInMonth; d++) {
-    const isToday = d === today.getDate() && today.getMonth() === month && today.getFullYear() === year;
-    const evts = scheduled[d] || [];
-    html += `<div class="cal-day ${isToday?'today':''}"><div class="cal-dn">${d}</div>${evts.map(e=>`<div class="cal-ev ${e.cls}">${e.lbl}</div>`).join('')}</div>`;
+  document.getElementById('dash-meta').textContent =
+    today.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'}) +
+    ' · 포스트 ' + posts.length + '개';
+
+  // 주간 계획
+  const days = ['MON','TUE','WED','THU','FRI','SAT','SUN'];
+  const dayNums = [];
+  const dow = today.getDay(); // 0=Sun
+  const monOffset = (dow === 0) ? -6 : 1 - dow;
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(today); d.setDate(today.getDate() + monOffset + i);
+    dayNums.push(d);
   }
-  body.innerHTML = html;
+  const EV_CLASS = {mental:'ev-m',tip:'ev-t',vocab:'ev-v',guide:'ev-g',inspo:'ev-m',project:'ev-g',stackd:'ev-v'};
+  document.getElementById('week-days').innerHTML = days.map((d,i) => {
+    const dt = dayNums[i];
+    const isT = dt.toDateString() === today.toDateString();
+    const dateStr = dt.toISOString().split('T')[0];
+    const evts = posts.filter(p => p.date === dateStr);
+    return `<div class="wd ${isT?'today':''}">
+      <div class="wd-name">${d}</div>
+      <div class="wd-num">${dt.getDate()}</div>
+      ${evts.slice(0,2).map(e=>`<div class="wd-ev ${EV_CLASS[e.series]||'ev-v'}">${e.title.substring(0,8)}</div>`).join('')}
+    </div>`;
+  }).join('');
+
+  // 파이프라인
+  ['idea','draft','ready','done'].forEach(s => {
+    const list = posts.filter(p => p.status === s).slice(0,4);
+    document.getElementById('pipe-' + s).textContent = posts.filter(p=>p.status===s).length;
+    document.getElementById('pipe-' + s + '-list').innerHTML = list.map(p => `
+      <div class="pc-item" onclick="editPost(${p.id})">
+        <div class="pc-series">${SERIES[p.series]||p.series} #${p.num}</div>
+        <div class="pc-title">${esc(p.title)}</div>
+        <div class="pc-date">${p.date||'날짜 미정'}</div>
+      </div>`).join('') || '<div style="font-family:var(--fm);font-size:9px;color:var(--t3);padding:6px 0;">없음</div>';
+  });
+
+  // 시리즈 현황
+  const ss = document.getElementById('series-status');
+  ss.innerHTML = Object.keys(SERIES).map((k,i) => {
+    const cnt = posts.filter(p=>p.series===k).length;
+    const done = posts.filter(p=>p.series===k&&p.status==='done').length;
+    return `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;${i>0?'border-top:1px solid var(--line)':''}">
+      <div style="width:6px;height:6px;border-radius:50%;background:${SERIES_COLOR[k]};flex-shrink:0;"></div>
+      <span style="flex:1;font-size:11px;">${SERIES[k]}</span>
+      <span style="font-family:var(--fm);font-size:9px;color:var(--t2);">${done}/${cnt}</span>
+    </div>`;
+  }).join('');
 }
 
-// ── MODAL ──
-function openModal() {
+// ══════════════════════════════════
+// POST LIST
+// ══════════════════════════════════
+function renderPosts() {
+  updateCounts();
+  let filtered = [...posts];
+  if (currentFilter.series !== 'all') filtered = filtered.filter(p => p.series === currentFilter.series);
+  if (currentFilter.status !== 'all') filtered = filtered.filter(p => p.status === currentFilter.status);
+  filtered.sort((a,b) => (b.date||'').localeCompare(a.date||'') || b.id - a.id);
+  document.getElementById('posts-meta').textContent = `${filtered.length}개 표시 중 (전체 ${posts.length}개)`;
+  const tbody = document.getElementById('post-tbody');
+  tbody.innerHTML = filtered.map(p => `
+    <tr onclick="editPost(${p.id})">
+      <td class="tr-num">#${p.num}</td>
+      <td><div class="tr-series">${SERIES[p.series]||p.series}</div></td>
+      <td><div class="tr-title">${esc(p.title)}</div>${p.memo?`<div style="font-size:10px;color:var(--t2);margin-top:2px;">${esc(p.memo)}</div>`:''}</td>
+      <td><span class="tr-status ${STATUS_CLASS[p.status]||'s-idea'}">${STATUS_LABEL[p.status]||p.status}</span></td>
+      <td class="tr-date">${p.date||'—'}</td>
+      <td>
+        <div class="tr-actions">
+          <button class="btn-icon" title="AI 변환" onclick="event.stopPropagation();sendPostToStudio(${p.id})">✦</button>
+          <button class="btn-icon" title="편집" onclick="event.stopPropagation();editPost(${p.id})">✎</button>
+          <button class="btn-icon" title="삭제" onclick="event.stopPropagation();deletePost(${p.id})" style="color:var(--acc3);">✕</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function filterSeries(s, el) {
+  document.querySelectorAll('.sidebar .sb-item').forEach(i => i.classList.remove('act'));
+  el.classList.add('act');
+  currentFilter.series = s;
+  if (document.getElementById('view-posts').classList.contains('act')) renderPosts();
+}
+function filterStatus(s, el) {
+  currentFilter.status = s;
+  document.querySelectorAll('#filter-toolbar .filter-btn').forEach(b => b.classList.remove('act'));
+  el.classList.add('act');
+  renderPosts();
+}
+
+// ══════════════════════════════════
+// EDITOR
+// ══════════════════════════════════
+function editPost(id) {
+  const p = posts.find(x => x.id === id);
+  if (!p) return;
+  editingId = id;
+  document.getElementById('ed-id').value = id;
+  document.getElementById('ed-series').value = p.series;
+  document.getElementById('ed-num').value = p.num;
+  document.getElementById('ed-title').value = p.title || '';
+  document.getElementById('ed-body').value = p.body || '';
+  document.getElementById('ed-status').value = p.status;
+  document.getElementById('ed-date').value = p.date || '';
+  document.getElementById('ed-memo').value = p.memo || '';
+  document.getElementById('editor-title-label').innerHTML = `${SERIES[p.series]} <em>#${p.num}</em>`;
+  document.getElementById('editor-meta').textContent = `마지막 수정: ${p.date || '날짜 없음'}`;
+  updatePreview();
+  nav('editor');
+}
+
+function newPost() {
+  editingId = null;
+  document.getElementById('ed-id').value = '';
+  document.getElementById('ed-series').value = 'mental';
+  document.getElementById('ed-num').value = posts.filter(p=>p.series==='mental').length + 1;
+  document.getElementById('ed-title').value = '';
+  document.getElementById('ed-body').value = '';
+  document.getElementById('ed-status').value = 'draft';
+  document.getElementById('ed-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('ed-memo').value = '';
+  document.getElementById('editor-title-label').textContent = '새 포스트';
+  document.getElementById('editor-meta').textContent = '작성 중...';
+  updatePreview();
+  nav('editor');
+}
+
+function savePost() {
+  const id = document.getElementById('ed-id').value;
+  const data = {
+    series: document.getElementById('ed-series').value,
+    num: parseInt(document.getElementById('ed-num').value),
+    title: document.getElementById('ed-title').value || '제목 없음',
+    body: document.getElementById('ed-body').value,
+    status: document.getElementById('ed-status').value,
+    date: document.getElementById('ed-date').value,
+    memo: document.getElementById('ed-memo').value,
+  };
+  if (id) {
+    const idx = posts.findIndex(p => p.id == id);
+    if (idx >= 0) posts[idx] = {...posts[idx], ...data};
+  } else {
+    posts.unshift({id: Date.now(), ...data});
+    document.getElementById('ed-id').value = posts[0].id;
+    editingId = posts[0].id;
+  }
+  savePosts(); updateCounts();
+  document.getElementById('editor-meta').textContent = '저장됨 · ' + new Date().toLocaleTimeString('ko-KR');
+}
+
+function saveAndClose() { savePost(); nav('posts'); renderPosts(); }
+
+function updatePreview() {
+  const series = document.getElementById('ed-series').value;
+  const num = document.getElementById('ed-num').value;
+  const title = document.getElementById('ed-title').value;
+  const body = document.getElementById('ed-body').value;
+  const label = `[${SERIES[series]} #${num}]`;
+  const paragraphs = (label + (title ? '\n\n' + title : '') + (body ? '\n\n' + body : '')).split(/\n---\n|\n\n---\n\n/);
+  document.getElementById('thread-preview').innerHTML = paragraphs.map((p,i) => `
+    <div class="tp">
+      <div class="tp-av">ST</div>
+      <div class="tp-con">
+        <div class="tp-handle">@vibestackd</div>
+        <div class="tp-text">${esc(p.trim())}</div>
+        <div class="tp-num">${i+1}/${paragraphs.length}</div>
+      </div>
+    </div>`).join('');
+}
+
+function sendToStudio() {
+  const id = document.getElementById('ed-id').value;
+  if (id) { sendPostToStudio(parseInt(id)); } else {
+    document.getElementById('st-body').value = document.getElementById('ed-body').value;
+    nav('studio');
+  }
+}
+
+function sendPostToStudio(id) {
+  const p = posts.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('st-body').value = `[${SERIES[p.series]} #${p.num}]\n${p.title}\n\n${p.body}`;
+  renderStudioSources();
+  nav('studio');
+}
+
+// ══════════════════════════════════
+// MODAL
+// ══════════════════════════════════
+function openNew() {
+  document.getElementById('m-id').value = '';
+  document.getElementById('m-title').value = '';
+  document.getElementById('m-body').value = '';
+  document.getElementById('m-status').value = 'draft';
   document.getElementById('m-date').value = new Date().toISOString().split('T')[0];
-  document.getElementById('modal').classList.add('open');
+  document.getElementById('modal-title').textContent = '새 포스트';
   updateModalPreview();
+  document.getElementById('modal').classList.add('open');
 }
 function closeModal() { document.getElementById('modal').classList.remove('open'); }
 function updateModalPreview() {
@@ -837,36 +1352,100 @@ function updateModalPreview() {
   const t = document.getElementById('m-title').value;
   const b = document.getElementById('m-body').value;
   const label = `[${SERIES[s]} #${n}]`;
-  document.getElementById('modal-preview').textContent = label + (t ? '\n\n' + t : '') + (b ? '\n\n' + b : '');
+  const full = label + (t ? '\n\n' + t : '') + (b ? '\n\n' + b : '');
+  document.getElementById('modal-preview').innerHTML = `
+    <div class="tp"><div class="tp-av">ST</div><div class="tp-con">
+      <div class="tp-handle">@vibestackd</div>
+      <div class="tp-text">${esc(full)}</div>
+    </div></div>`;
 }
-function savePost() {
-  const p = {
-    id: Date.now(),
+function saveModal() {
+  const id = document.getElementById('m-id').value;
+  const data = {
     series: document.getElementById('m-series').value,
     num: parseInt(document.getElementById('m-num').value),
     title: document.getElementById('m-title').value || '제목 없음',
     body: document.getElementById('m-body').value,
     status: document.getElementById('m-status').value,
-    date: document.getElementById('m-date').value
+    date: document.getElementById('m-date').value,
+    memo: '',
   };
-  posts.unshift(p); savePosts(); closeModal();
-  if (document.getElementById('tab-posts').classList.contains('active')) renderPosts('all');
+  if (id) {
+    const idx = posts.findIndex(p => p.id == id);
+    if (idx >= 0) posts[idx] = {...posts[idx], ...data};
+  } else {
+    posts.unshift({id: Date.now(), ...data});
+  }
+  savePosts(); updateCounts(); closeModal();
+  if (document.getElementById('view-posts').classList.contains('act')) renderPosts();
+  if (document.getElementById('view-dash').classList.contains('act')) renderDash();
 }
-function sendToStudio() {
-  const s = document.getElementById('m-series').value;
-  const n = document.getElementById('m-num').value;
-  const t = document.getElementById('m-title').value;
-  const b = document.getElementById('m-body').value;
-  document.getElementById('in-series').value = s;
-  document.getElementById('in-num').value = n;
-  document.getElementById('in-title').value = t;
-  document.getElementById('in-body').value = b;
+function modalToEditor() {
+  const data = {
+    series: document.getElementById('m-series').value,
+    num: parseInt(document.getElementById('m-num').value),
+    title: document.getElementById('m-title').value || '제목 없음',
+    body: document.getElementById('m-body').value,
+    status: document.getElementById('m-status').value,
+    date: document.getElementById('m-date').value,
+    memo: '',
+  };
+  posts.unshift({id: Date.now(), ...data});
+  savePosts();
   closeModal();
-  showTab('studio');
+  editPost(posts[0].id);
 }
-document.getElementById('modal').addEventListener('click', e => { if (e.target === document.getElementById('modal')) closeModal(); });
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal')) closeModal();
+});
 
-// ── 플랫폼 토글 ──
+// ══════════════════════════════════
+// QUICK CAPTURE
+// ══════════════════════════════════
+function quickSave() {
+  const txt = document.getElementById('quick-idea').value.trim();
+  if (!txt) return;
+  posts.unshift({id:Date.now(),series:'inspo',num:posts.filter(p=>p.series==='inspo').length+1,
+    title:txt,body:'',status:'idea',date:'',memo:'빠른 캡처'});
+  savePosts(); updateCounts();
+  document.getElementById('quick-idea').value = '';
+  renderDash();
+}
+
+let qbOpen = false;
+function toggleQuickBar() {
+  qbOpen = !qbOpen;
+  document.getElementById('quick-bar').classList.toggle('show', qbOpen);
+  if (qbOpen) document.getElementById('qb-input').focus();
+}
+function closeQuickBar() { qbOpen = false; document.getElementById('quick-bar').classList.remove('show'); }
+
+// ══════════════════════════════════
+// DELETE
+// ══════════════════════════════════
+function deletePost(id) {
+  if (!confirm('이 포스트를 삭제할까요?')) return;
+  posts = posts.filter(p => p.id !== id);
+  savePosts(); updateCounts(); renderPosts();
+}
+
+// ══════════════════════════════════
+// AI STUDIO
+// ══════════════════════════════════
+function renderStudioSources() {
+  const ready = posts.filter(p => ['draft','ready'].includes(p.status)).slice(0,6);
+  document.getElementById('studio-source-list').innerHTML = ready.map(p => `
+    <div class="studio-source" onclick="selectSource(${p.id},this)">
+      <div class="ss-series">${SERIES[p.series]} #${p.num}</div>
+      <div class="ss-title">${esc(p.title)}</div>
+    </div>`).join('') || '<div style="font-family:var(--fm);font-size:9px;color:var(--t3);">초안/준비 포스트 없음</div>';
+}
+function selectSource(id, el) {
+  document.querySelectorAll('.studio-source').forEach(s => s.classList.remove('sel'));
+  el.classList.add('sel');
+  const p = posts.find(x => x.id === id);
+  if (p) document.getElementById('st-body').value = `[${SERIES[p.series]} #${p.num}]\n${p.title}\n\n${p.body}`;
+}
 document.querySelectorAll('.ptog').forEach(tog => {
   tog.addEventListener('click', () => {
     const chk = tog.querySelector('input');
@@ -875,99 +1454,126 @@ document.querySelectorAll('.ptog').forEach(tog => {
   });
 });
 
-// ── API KEY ──
-function getApiKey() { return localStorage.getItem('stackd_key') || ''; }
-function saveApiKey() {
-  const k = document.getElementById('api-key-in').value.trim();
-  if (!k) return;
-  localStorage.setItem('stackd_key', k);
-  const st = document.getElementById('api-st');
-  st.style.display = 'block'; st.className = 'api-st ok'; st.textContent = '✓ API 키 저장됨';
-  document.getElementById('key-badge').textContent = 'API 연결됨';
-  document.getElementById('key-badge').style.color = '#6adb8a';
-}
-function saveSettings() {
-  localStorage.setItem('stackd_handle', document.getElementById('set-handle').value);
-  localStorage.setItem('stackd_url', document.getElementById('set-url').value);
-  localStorage.setItem('stackd_tags', document.getElementById('set-tags').value);
-  alert('설정 저장 완료!');
-}
-
-// ── AI 변환 ──
 async function generateContent() {
   const apiKey = getApiKey();
-  if (!apiKey) { alert('설정 탭에서 Claude API 키를 입력해줘!'); showTab('settings'); return; }
-  const body = document.getElementById('in-body').value.trim();
+  if (!apiKey) { alert('설정에서 Claude API 키를 입력해줘!'); nav('settings'); return; }
+  const body = document.getElementById('st-body').value.trim();
   if (!body) { alert('원고를 입력해줘!'); return; }
-  const series = document.getElementById('in-series').value;
-  const num = document.getElementById('in-num').value;
-  const title = document.getElementById('in-title').value.trim();
-  const tone = document.getElementById('in-tone').value;
-  const platforms = ['thread','insta','blog','x'].filter(p => document.getElementById('pchk-'+p)?.checked);
-  const handle = localStorage.getItem('stackd_handle') || '@vibestackd';
-  const url = localStorage.getItem('stackd_url') || 'vibestackd.com';
-  const tags = localStorage.getItem('stackd_tags') || '#바이브코딩 #사이드프로젝트 #AI코딩';
-  const seriesLabel = `[${SERIES[series]} #${num}]`;
-  const toneMap = {casual:'친근하고 편안한 반말 톤.',insight:'통찰 있고 깊이 있는 톤.',howto:'단계별 실용적인 톤.',story:'공감 중심 감성적 스토리텔링 톤.'};
-  setLoading(true);
-  const prompt = `너는 ${handle} 계정의 콘텐츠 에디터야. 바이브코딩 관련 매거진 스타일 콘텐츠를 운영하고 있어.
+  const tone = document.getElementById('st-tone').value;
+  const platforms = ['t','i','b','x'].filter(p => document.getElementById('pchk-'+p)?.checked);
+  const handle = localStorage.getItem('sos_handle') || '@vibestackd';
+  const url = localStorage.getItem('sos_url') || 'vibestackd.com';
+  const tags = localStorage.getItem('sos_tags') || '#바이브코딩 #사이드프로젝트 #AI코딩';
+  const toneMap = {casual:'친근한 반말 톤.',insight:'통찰 있고 깊은 톤.',howto:'단계별 실용적 톤.',story:'공감 중심 감성 톤.'};
+  setGenLoading(true);
+  const prompt = `너는 ${handle} 계정의 콘텐츠 에디터야. 바이브코딩 매거진 스타일.
 
-아래 원고를 각 플랫폼에 맞게 변환해줘:
-시리즈: ${seriesLabel}
-제목: ${title}
-원고: ${body}
+원고:
+${body}
+
 톤: ${toneMap[tone]}
-계정: ${handle} / URL: ${url} / 해시태그: ${tags}
+계정: ${handle} / URL: ${url} / 태그: ${tags}
 
-아래 JSON 형식으로만 응답해. 다른 텍스트 없이 순수 JSON만:
-{"thread":{"posts":[{"text":"내용","num":"1/N"}]},"insta":{"cover":"커버 문구 20자 이내","caption":"캡션","hashtags":"해시태그들"},"blog":{"title":"블로그 제목","meta":"작성일 · 시리즈 · 읽기 시간","body":"본문 (소제목은 [제목] 형식)"},"x":{"posts":[{"text":"280자 이내 트윗"}]}}
+JSON만 응답해:
+{"thread":{"posts":[{"text":"내용","num":"1/N"}]},"insta":{"cover":"커버 20자 이내","caption":"캡션","hashtags":"해시태그"},"blog":{"title":"제목","meta":"메타","body":"본문 (소제목은 [제목] 형식)"},"x":{"posts":[{"text":"280자 트윗"}]}}
 
-스레드는 3~6개, X는 2~4개로 구성해. 각 플랫폼의 특성에 맞게 다르게 작성해.`;
+스레드 3~6개, X 2~4개.`;
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:prompt}]})
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:prompt}]})
     });
     const data = await res.json();
-    const raw = data.content?.[0]?.text || '';
+    const raw = data.content?.[0]?.text||'';
     const result = JSON.parse(raw.replace(/```json|```/g,'').trim());
-    currentResult = {series,num,title,body,tone,platforms,result,date:new Date().toISOString()};
-    renderOutput(result, platforms, seriesLabel, title);
-  } catch(e) { alert('오류: ' + e.message); console.error(e); }
-  setLoading(false);
+    currentResult = {body,tone,platforms,result,date:new Date().toISOString()};
+    renderOutput(result, platforms);
+  } catch(e) { alert('오류: '+e.message); }
+  setGenLoading(false);
 }
 
-function setLoading(on) {
+function setGenLoading(on) {
   const btn = document.getElementById('btn-gen');
   btn.classList.toggle('loading', on); btn.disabled = on;
-  document.getElementById('gen-spinner').style.display = on ? 'block' : 'none';
-  document.getElementById('btn-gen-text').textContent = on ? '변환 중...' : '✦ AI로 변환 생성';
+  document.getElementById('gen-spin').style.display = on?'block':'none';
+  document.getElementById('gen-txt').textContent = on?'생성 중...':'✦ AI로 변환 생성';
 }
 
-function renderOutput(result, platforms, seriesLabel, title) {
-  document.getElementById('empty-state').style.display = 'none';
-  document.getElementById('output-container').style.display = 'block';
-  document.getElementById('output-ttl').textContent = title || seriesLabel;
-  const pMap = {thread:'스레드',insta:'인스타그램',blog:'블로그',x:'X'};
-  const tabsEl = document.getElementById('ptabs');
-  tabsEl.innerHTML = platforms.map((p,i) => `<div class="ptab ${i===0?'active':''}" onclick="switchPTab('${p}',this)">${pMap[p]}</div>`).join('');
-  document.querySelectorAll('.output-pane').forEach(p => p.classList.remove('active'));
-  if (platforms.length) switchPTab(platforms[0], tabsEl.querySelector('.ptab'));
-  if (result.thread) document.getElementById('thread-out').innerHTML = result.thread.posts.map(p=>`<div class="t-post"><div class="av">ST</div><div class="t-con"><div class="t-handle">@vibestackd</div><div class="t-text">${esc(p.text)}</div><div class="t-num">${p.num||''}</div></div></div>`).join('');
-  if (result.insta) { document.getElementById('insta-cover').textContent=result.insta.cover||''; document.getElementById('insta-cap').textContent=result.insta.caption||''; document.getElementById('insta-tags').textContent=result.insta.hashtags||''; }
-  if (result.blog) document.getElementById('blog-out').innerHTML=`<div class="bp-title">${esc(result.blog.title||'')}</div><div class="bp-meta">${esc(result.blog.meta||'')}</div><div class="bp-body">${esc(result.blog.body||'').replace(/\[([^\]]+)\]/g,'<strong>$1</strong>')}</div>`;
-  if (result.x) document.getElementById('x-out').innerHTML=result.x.posts.map((p,i)=>`<div class="t-post"><div class="av">VS</div><div class="t-con"><div class="t-handle">@vibestackd</div><div class="t-text">${esc(p.text)}</div><div class="t-num">${i+1}/${result.x.posts.length}</div></div></div>`).join('');
+function renderOutput(result, platforms) {
+  document.getElementById('studio-empty').style.display = 'none';
+  document.getElementById('studio-output').style.display = 'block';
+  const pMap = {t:'스레드',i:'인스타그램',b:'블로그',x:'X'};
+  const tabsEl = document.getElementById('out-tabs');
+  tabsEl.innerHTML = platforms.map((p,i) =>
+    `<div class="otab ${i===0?'act':''}" onclick="switchOutTab('${p}',this)">${pMap[p]}</div>`
+  ).join('');
+  document.querySelectorAll('.out-pane').forEach(p=>p.classList.remove('act'));
+  if (platforms.length) switchOutTab(platforms[0], tabsEl.querySelector('.otab'));
+
+  if (result.thread) {
+    document.getElementById('out-thread').innerHTML = `
+      <div class="out-block">
+        <div class="ob-head"><span class="ob-platform">Threads · ${localStorage.getItem('sos_handle')||'@vibestackd'}</span>
+        <button class="btn-copy" onclick="copyOut('thread')">복사</button></div>
+        <div class="ob-body tprev">${result.thread.posts.map(p=>`
+          <div class="tp"><div class="tp-av">ST</div><div class="tp-con">
+            <div class="tp-handle">@vibestackd</div>
+            <div class="tp-text">${esc(p.text)}</div>
+            <div class="tp-num">${p.num||''}</div>
+          </div></div>`).join('')}
+        </div>
+      </div>`;
+  }
+  if (result.insta) {
+    document.getElementById('out-insta').innerHTML = `
+      <div class="out-block">
+        <div class="ob-head"><span class="ob-platform">Instagram</span>
+        <button class="btn-copy" onclick="copyOut('insta')">캡션 복사</button></div>
+        <div class="ob-body">
+          <div class="insta-cover-preview"><div class="icp-text">${esc(result.insta.cover||'')}</div><div class="icp-watermark">@vibestackd</div></div>
+          <div class="insta-caption">${esc(result.insta.caption||'')}</div>
+          <div class="insta-tags">${esc(result.insta.hashtags||'')}</div>
+        </div>
+      </div>`;
+  }
+  if (result.blog) {
+    document.getElementById('out-blog').innerHTML = `
+      <div class="out-block">
+        <div class="ob-head"><span class="ob-platform">블로그</span>
+        <button class="btn-copy" onclick="copyOut('blog')">복사</button></div>
+        <div class="ob-body">
+          <div class="blog-title">${esc(result.blog.title||'')}</div>
+          <div class="blog-meta">${esc(result.blog.meta||'')}</div>
+          <div class="blog-body">${esc(result.blog.body||'').replace(/\[([^\]]+)\]/g,'<strong>$1</strong>')}</div>
+        </div>
+      </div>`;
+  }
+  if (result.x) {
+    document.getElementById('out-x').innerHTML = `
+      <div class="out-block">
+        <div class="ob-head"><span class="ob-platform">X (트위터)</span>
+        <button class="btn-copy" onclick="copyOut('x')">복사</button></div>
+        <div class="ob-body tprev">${result.x.posts.map((p,i)=>`
+          <div class="tp"><div class="tp-av">VS</div><div class="tp-con">
+            <div class="tp-handle">@vibestackd</div>
+            <div class="tp-text">${esc(p.text)}</div>
+            <div class="tp-num">${i+1}/${result.x.posts.length}</div>
+          </div></div>`).join('')}
+        </div>
+      </div>`;
+  }
 }
 
-function switchPTab(platform, el) {
-  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  document.querySelectorAll('.output-pane').forEach(p=>p.classList.remove('active'));
-  document.getElementById('pane-'+platform)?.classList.add('active');
+function switchOutTab(p, el) {
+  document.querySelectorAll('.otab').forEach(t=>t.classList.remove('act'));
+  el.classList.add('act');
+  document.querySelectorAll('.out-pane').forEach(x=>x.classList.remove('act'));
+  const map = {t:'thread',i:'insta',b:'blog',x:'x'};
+  document.getElementById('out-' + (map[p]||p))?.classList.add('act');
 }
 
-function copyPlatform(platform) {
+function copyOut(platform) {
   if (!currentResult) return;
   const r = currentResult.result;
   let text = '';
@@ -976,67 +1582,90 @@ function copyPlatform(platform) {
   if (platform==='blog'&&r.blog) text=r.blog.title+'\n\n'+r.blog.body;
   if (platform==='x'&&r.x) text=r.x.posts.map(p=>p.text).join('\n\n---\n\n');
   navigator.clipboard.writeText(text).then(()=>{
-    const btn = event.target;
-    const orig = btn.textContent;
-    btn.textContent='✓ 복사됨'; btn.classList.add('copied');
-    setTimeout(()=>{btn.textContent=orig;btn.classList.remove('copied');},2000);
+    const btns = document.querySelectorAll('.btn-copy');
+    btns.forEach(b=>{if(b.onclick&&b.onclick.toString().includes(platform)){
+      const orig=b.textContent; b.textContent='✓ 복사됨'; b.classList.add('ok');
+      setTimeout(()=>{b.textContent=orig;b.classList.remove('ok');},2000);
+    }});
   });
 }
 
 function saveToArchive() {
   if (!currentResult) return;
   archive.unshift(currentResult);
-  localStorage.setItem('stackd_archive2', JSON.stringify(archive.slice(0,50)));
-  alert('아카이브에 저장됐어!');
+  localStorage.setItem('sos_archive', JSON.stringify(archive.slice(0,50)));
+  alert('저장됐어!');
 }
 
-function renderArchive() {
-  const grid = document.getElementById('archive-grid');
-  const empty = document.getElementById('archive-empty');
-  if (!archive.length) { grid.innerHTML=''; empty.style.display='block'; return; }
-  empty.style.display='none';
-  const pColors = {thread:'#aaa',insta:'#833ab4',blog:'#2563eb',x:'#333'};
-  grid.innerHTML = archive.map((a,i)=>`
-    <div class="arch-card" onclick="loadArchiveItem(${i})">
-      <div class="arch-meta"><span>${SERIES[a.series]||''} #${a.num}</span><span>${new Date(a.date).toLocaleDateString('ko-KR')}</span></div>
-      <div class="arch-title">${esc(a.title||'제목 없음')}</div>
-      <div class="arch-prev">${esc(a.body||'')}</div>
-      <div class="arch-dots">${(a.platforms||[]).map(p=>`<div class="arch-dot" style="background:${pColors[p]||'#ccc'}"></div>`).join('')}</div>
-    </div>`).join('');
+// ══════════════════════════════════
+// SETTINGS
+// ══════════════════════════════════
+function saveApiKey() {
+  const k = document.getElementById('api-in').value.trim();
+  if (!k) return;
+  localStorage.setItem('sos_key', k);
+  const note = document.getElementById('api-note');
+  note.style.display = 'block'; note.className = 'api-note ok';
+  note.textContent = '✓ API 키 저장됨';
+  document.getElementById('api-dot').classList.add('on');
+  document.getElementById('api-label').textContent = 'API 연결됨';
+}
+function saveSettings() {
+  localStorage.setItem('sos_handle', document.getElementById('set-handle').value);
+  localStorage.setItem('sos_url', document.getElementById('set-url').value);
+  localStorage.setItem('sos_tags', document.getElementById('set-tags').value);
+  alert('저장됐어!');
+}
+function exportAll() { saveFileAs(); }
+function importAll(input) { /* 사용 안 함 - openFile() 사용 */ }
+function resetAll() {
+  if (!confirm('모든 포스트를 삭제할까요? 현재 파일에도 저장돼요.')) return;
+  posts = []; archive = [];
+  markDirty(); updateCounts(); renderDash();
+  alert('초기화 완료. 저장 버튼을 눌러 반영해.');
 }
 
-function loadArchiveItem(idx) {
-  const item = archive[idx];
-  if (!item) return;
-  document.getElementById('in-series').value = item.series;
-  document.getElementById('in-num').value = item.num;
-  document.getElementById('in-title').value = item.title||'';
-  document.getElementById('in-body').value = item.body||'';
-  document.getElementById('in-tone').value = item.tone||'casual';
-  currentResult = item;
-  renderOutput(item.result, item.platforms||['thread'], `[${SERIES[item.series]} #${item.num}]`, item.title);
-  showTab('studio');
-}
-
-function loadDeepDiveToStudio(content) {
-  document.getElementById('in-series').value = 'stackd';
-  document.getElementById('in-title').value = content.split(':')[0];
-  document.getElementById('in-body').value = content;
-  showTab('studio');
-}
-
-// ── 설정 초기화 ──
-(function init(){
+// ══════════════════════════════════
+// INIT
+// ══════════════════════════════════
+function initSettings() {
   const k = getApiKey();
-  if (k) { document.getElementById('api-key-in').value=k; document.getElementById('key-badge').textContent='API 연결됨'; document.getElementById('key-badge').style.color='#6adb8a'; }
-  const h = localStorage.getItem('stackd_handle'); if (h) document.getElementById('set-handle').value=h;
-  const u = localStorage.getItem('stackd_url'); if (u) document.getElementById('set-url').value=u;
-  const t = localStorage.getItem('stackd_tags'); if (t) document.getElementById('set-tags').value=t;
-  renderCalendar();
-  renderPosts('all');
-})();
+  if (k) {
+    const ain = document.getElementById('api-in');
+    if(ain) ain.value = k;
+    document.getElementById('api-dot').classList.add('on');
+    document.getElementById('api-label').textContent = 'API 연결됨';
+  }
+  const h = localStorage.getItem('sos_handle'); if(h){const el=document.getElementById('set-handle');if(el)el.value=h;}
+  const u = localStorage.getItem('sos_url'); if(u){const el=document.getElementById('set-url');if(el)el.value=u;}
+  const t = localStorage.getItem('sos_tags'); if(t){const el=document.getElementById('set-tags');if(el)el.value=t;}
+}
 
-function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+(function init() {
+  initSettings();
+  // ⌘S 저장
+  document.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 's') { e.preventDefault(); saveFile(); }
+    if ((e.metaKey || e.ctrlKey) && e.key === 'o') { e.preventDefault(); openFile(); }
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); toggleQuickBar(); }
+    if (e.key === 'Escape') { closeQuickBar(); closeModal(); }
+    if (e.key === 'Enter' && qbOpen) {
+      const v = document.getElementById('qb-input').value.trim();
+      if (v) {
+        posts.unshift({id:Date.now(),series:'inspo',num:posts.filter(p=>p.series==='inspo').length+1,
+          title:v,body:'',status:'idea',date:new Date().toISOString().split('T')[0],memo:'빠른 캡처 (⌘K)'});
+        savePosts(); updateCounts();
+        document.getElementById('qb-input').value = '';
+        closeQuickBar();
+        if (document.getElementById('view-dash').classList.contains('act')) renderDash();
+      }
+    }
+  });
+  // 닫기 전 경고
+  window.addEventListener('beforeunload', e => {
+    if (isDirty) { e.preventDefault(); e.returnValue = ''; }
+  });
+})();
 </script>
 </body>
 </html>
